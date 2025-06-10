@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
-from .models import Service
-from .serializers import ServiceSerializer
+from .models import Service, Appointment, AppointmentTime
+from .serializers import ServiceSerializer, AppointmentSerializer, AppointmentTimeSerializer
 
 class isAdminOrReadOnly(permissions.BasePermission):
     """
@@ -25,4 +25,26 @@ class ServiceViewSet(viewsets.ModelViewSet):
     
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
+    permission_classes = [isAdminOrReadOnly]
+
+
+class AppointmentViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for managing Appointment instances.
+    Provides CRUD operations for the Appointment model.
+    """
+    
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentSerializer
+    permission_classes = [isAdminOrReadOnly]
+
+
+class AppointmentTimeViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for managing AppointmentTime instances.
+    Provides CRUD operations for the AppointmentTime model.
+    """
+    
+    queryset = AppointmentTime.objects.all()
+    serializer_class = AppointmentTimeSerializer
     permission_classes = [isAdminOrReadOnly]
