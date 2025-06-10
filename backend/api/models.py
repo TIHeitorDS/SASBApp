@@ -24,3 +24,15 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+
+
+class Service(models.Model):
+    """
+    Model representing a service that can be used by users.
+    """
+    name = models.CharField(max_length=255, unique=True)
+    duration = models.IntegerField(help_text="Duração do serviço em minutos")
+    price = models.CharField(max_length=20, help_text="Preço em reais")
+
+    def __str__(self):
+        return self.name
