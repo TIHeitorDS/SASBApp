@@ -88,4 +88,4 @@ class Appointment(models.Model):
         return not overlapping_appointments.exists()
 
     def __str__(self):
-        return f"{self.user.username} - {self.service.name} at {self.appointment_time.start_time.strftime('%Y-%m-%d %H:%M')}"
+        return f"{self.userName} - {self.service.name} at {self.appointment_time.start_time.strftime('%Y-%m-%d %H:%M')}"
