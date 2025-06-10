@@ -42,6 +42,7 @@ class AppointmentTime(models.Model):
     """
     Model representing an appointment time for a service.
     """
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
 
