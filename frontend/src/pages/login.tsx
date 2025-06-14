@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Input from "../components/input";
 import SubmitButton from "../components/submit-button";
 import Layout from "../ui/login-signup";
+import { Link } from "react-router";
 
 export default function Login() {
   useEffect(() => {
@@ -33,9 +34,9 @@ export default function Login() {
 
       <p className="text-center mt-8">
         Não tem uma conta?{" "}
-        <span className="text-pink underline underline-offset-2 hover:text-pink/90 transition-all">
+        <Link to={"/signup"} className="text-pink underline underline-offset-2 hover:text-pink/90 transition-all">
           Cadastrar-se
-        </span>
+        </Link>
       </p>
     </Layout>
   );
