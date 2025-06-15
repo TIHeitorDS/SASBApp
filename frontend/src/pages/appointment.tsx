@@ -6,9 +6,7 @@ export default function Appointment() {
     <>
       <Table />
 
-      <div className="mt-10">
-        <NavButton path="servicos" text="Novo Agendamento" />
-      </div>
+      <NavButton path="servicos" text="Novo Agendamento" />
     </>
   );
 }

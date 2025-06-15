@@ -1,11 +1,11 @@
 export default function Table() {
   return (
-    <div className="w-full">
+    <div className="w-full font-syne">
       <div className="grid grid-cols-4 bg-gray-secondary/3 border-[0.5px] border-gray py-3 font-syne">
-        <div className="text-start pl-12">Serviço</div>
-        <div className="text-center">Cliente</div>
-        <div className="text-center">Profissional</div>
-        <div className="text-center">Data</div>
+        <div className="text-start pl-12 font-semibold" >Serviço</div>
+        <div className="text-center font-semibold">Cliente</div>
+        <div className="text-center font-semibold">Profissional</div>
+        <div className="text-center font-semibold">Data</div>
       </div>
 
       <div className="h-1" />
