@@ -10,7 +10,7 @@ export default function Table() {
 
       <div className="h-1" />
 
-      <div className="bg-gray-tertiary/3 px-5 lg:px-0 border-[0.5px] border-gray font-syne py-3 space-y-[29px] h-[367px] overflow-scroll">
+      <div className="bg-gray-tertiary/3 pl-1.5 lg:px-0 border-[0.5px] border-gray font-syne py-3 space-y-[29px] h-[367px] overflow-scroll">
         <div className="grid grid-cols-4 items-center">
           <div className="lg:pl-12 text-sm lg:text-base">Maquiagem para casamento</div>
           <div className="text-center text-sm lg:text-base">Helena</div>
