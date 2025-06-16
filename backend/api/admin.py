@@ -7,8 +7,8 @@ class CollaboratorAdmin(admin.ModelAdmin):
     Admin interface for the Collaborator model.
     Allows management of collaborators through the Django admin panel.
     """
-    list_display = ['name', 'username', 'email', 'phone', 'is_active']
-    search_fields = ['name', 'username', 'email']
+    list_display = ['name', 'email', 'password', 'phone', 'is_active']
+    search_fields = ['name', 'email']
     list_filter = ['is_active']
 
 @admin.register(Service)
@@ -27,7 +27,7 @@ class Appointment(admin.ModelAdmin):
     Admin interface for the Appointment model.
     Allows management of appointments through the Django admin panel.
     """
-    list_display = ['client', 'service', 'client_phone', 'collaborator' 'appointment_time', 'created_at', 'status']
+    list_display = ['service', 'client', 'appointment_time', 'client_phone', 'collaborator', 'created_at', 'status']
     search_fields = ['client', 'service__name']
     list_filter = ['created_at']
 

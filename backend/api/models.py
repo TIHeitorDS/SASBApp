@@ -33,8 +33,32 @@ class Collaborator(User):
     phone = models.CharField(max_length=20, blank=True, null=True)
     is_active = models.BooleanField(default=True, help_text="Indica se o colaborador está ativo")
 
+    class Meta:
+        # Add these to avoid clashes with auth.User
+        permissions = [
+            # your custom permissions here
+        ]
+        
     def __str__(self):
         return f"{self.name} ({self.username})"
+
+    # If you need to customize the related_name for groups and user_permissions
+    groups = models.ManyToManyField(
+        'auth.Group',
+        verbose_name='groups',
+        blank=True,
+        help_text='The groups this user belongs to.',
+        related_name="collaborator_groups",
+        related_query_name="collaborator",
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        verbose_name='user permissions',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        related_name="collaborator_permissions",
+        related_query_name="collaborator",
+    )
 
 
 class Service(models.Model):
@@ -68,7 +92,7 @@ class Appointment(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
     appointment_time = models.ForeignKey(AppointmentTime, on_delete=models.CASCADE)
     client = models.CharField(max_length=255, blank=True, null=True)
-    clientPhone = models.CharField(max_length=20, blank=True, null=True)
+    client_phone = models.CharField(max_length=20, blank=True, null=True)
     collaborator = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default='pending', choices=[

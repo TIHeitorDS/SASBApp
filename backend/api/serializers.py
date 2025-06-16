@@ -9,7 +9,7 @@ class CollaboratorSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Collaborator
-        fields = ['id', 'username', 'name', 'email', 'phone', 'is_active']
+        fields = ['id', 'name', 'email', 'password', 'phone', 'is_active']
         read_only_fields = ['id']  # id is auto-generated, so it should be read-only
 
 class ServiceSerializer(serializers.ModelSerializer):
@@ -44,5 +44,5 @@ class AppointmentSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Appointment
-        fields = ['id', 'client',  'service', 'appointment_time', 'clientPhone', 'collaborator', 'created_at', 'status']
+        fields = ['id', 'client',  'service', 'appointment_time', 'client_phone', 'collaborator', 'created_at', 'status']
         read_only_fields = ['id', 'created_at']  # id and created_at are auto-generated, so they should be read-only
