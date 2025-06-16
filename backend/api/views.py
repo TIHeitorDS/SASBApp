@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
-from .models import Service, Appointment, AppointmentTime
-from .serializers import ServiceSerializer, AppointmentSerializer, AppointmentTimeSerializer
+from .models import Service, Appointment, AppointmentTime, Collaborator
+from .serializers import ServiceSerializer, AppointmentSerializer, AppointmentTimeSerializer, CollaboratorSerializer
 
 class isAdminOrReadOnly(permissions.BasePermission):
     """
@@ -16,6 +16,16 @@ class isAdminOrReadOnly(permissions.BasePermission):
         # Allow write access only for admin users
         return request.user and request.user.is_staff
 
+
+class CollaboratorViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for managing Collaborator instances.
+    Provides CRUD operations for the Collaborator model.
+    """
+    
+    queryset = Collaborator.objects.all()
+    serializer_class = CollaboratorSerializer
+    permission_classes = [isAdminOrReadOnly]
 
 class ServiceViewSet(viewsets.ModelViewSet):
     """

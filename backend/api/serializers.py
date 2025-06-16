@@ -1,5 +1,16 @@
 from rest_framework import serializers
-from .models import Service, Appointment, AppointmentTime
+from .models import Service, Appointment, AppointmentTime, Collaborator
+
+class CollaboratorSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Collaborator model.
+    This serializer converts Collaborator instances to JSON and vice versa.
+    """
+    
+    class Meta:
+        model = Collaborator
+        fields = ['id', 'username', 'name', 'email', 'phone', 'is_active']
+        read_only_fields = ['id']  # id is auto-generated, so it should be read-only
 
 class ServiceSerializer(serializers.ModelSerializer):
     """
@@ -33,5 +44,5 @@ class AppointmentSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Appointment
-        fields = ['id', 'userName', 'service', 'appointment_time', 'created_at']
+        fields = ['id', 'client',  'service', 'appointment_time', 'clientPhone', 'collaborator', 'created_at', 'status']
         read_only_fields = ['id', 'created_at']  # id and created_at are auto-generated, so they should be read-only

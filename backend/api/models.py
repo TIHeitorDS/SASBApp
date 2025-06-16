@@ -25,6 +25,17 @@ class User(AbstractUser):
         return self.username
 
 
+class Collaborator(User):
+    """
+    Model representing a collaborator who can provide services.
+    Inherits from the custom User model.
+    """
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    is_active = models.BooleanField(default=True, help_text="Indica se o colaborador está ativo")
+
+    def __str__(self):
+        return f"{self.name} ({self.username})"
+
 
 class Service(models.Model):
     """
@@ -56,8 +67,8 @@ class Appointment(models.Model):
     """
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
     appointment_time = models.ForeignKey(AppointmentTime, on_delete=models.CASCADE)
-    userName = models.CharField(max_length=255, blank=True, null=True)
-    userPhone = models.CharField(max_length=20, blank=True, null=True)
+    client = models.CharField(max_length=255, blank=True, null=True)
+    clientPhone = models.CharField(max_length=20, blank=True, null=True)
     collaborator = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default='pending', choices=[
@@ -88,4 +99,4 @@ class Appointment(models.Model):
         return not overlapping_appointments.exists()
 
     def __str__(self):
-        return f"{self.userName} - {self.service.name} at {self.appointment_time.start_time.strftime('%Y-%m-%d %H:%M')}"
+        return f"{self.client} - {self.service.name} at {self.appointment_time.start_time.strftime('%Y-%m-%d %H:%M')}"
