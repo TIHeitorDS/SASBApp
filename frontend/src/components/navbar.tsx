@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 import icon from "../assets/SASBApp-logo.svg";
 import userProfile from "../assets/user-profile.png";
 import arrowDown from "../assets/arrow-down.svg";
@@ -8,6 +8,7 @@ import closeIcon from "../assets/close-menu.svg";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showExitButton, setShowExitButton] = useState(false);
 
   return (
     <nav className="flex justify-between items-center px-6 md:px-[100px] h-[80px] md:h-[123px] relative">
@@ -56,16 +57,37 @@ export default function Navbar() {
         </li>
       </ul>
 
-      <div className="hidden md:flex items-center gap-4">
+      <div className="hidden md:flex items-center gap-4 relative h-full">
         <img
           src={userProfile}
           alt="foto de perfil do usuário"
           className="w-8 h-8 rounded-full"
         />
+
         <p>Maria</p>
-        <button type="button" className="cursor-pointer">
-          <img src={arrowDown} alt="Abrir menu" />
+
+        <button
+          type="button"
+          className="cursor-pointer"
+          onClick={() => setShowExitButton(!showExitButton)}
+        >
+          <img
+            src={arrowDown}
+            alt="Abrir menu"
+            className={`${
+              showExitButton ? "rotate-180" : "rotate-0"
+            } transform transition-all`}
+          />
         </button>
+
+        {showExitButton && (
+          <Link
+            to="/login"
+            className="bg-black text-white absolute bottom-1 inset-x-0 text-center py-1.5"
+          >
+            Sair
+          </Link>
+        )}
       </div>
 
       <button
