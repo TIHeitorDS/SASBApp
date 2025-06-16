@@ -1,5 +1,15 @@
 from django.contrib import admin
-from .models import Service, Appointment, AppointmentTime
+from .models import Service, Appointment, AppointmentTime, Collaborator
+
+@admin.register(Collaborator)
+class CollaboratorAdmin(admin.ModelAdmin):
+    """
+    Admin interface for the Collaborator model.
+    Allows management of collaborators through the Django admin panel.
+    """
+    list_display = ['name', 'username', 'email', 'phone', 'is_active']
+    search_fields = ['name', 'username', 'email']
+    list_filter = ['is_active']
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
@@ -17,8 +27,8 @@ class Appointment(admin.ModelAdmin):
     Admin interface for the Appointment model.
     Allows management of appointments through the Django admin panel.
     """
-    list_display = ['userName', 'service', 'appointment_time', 'created_at']
-    search_fields = ['userName', 'service__name']
+    list_display = ['client', 'service', 'client_phone', 'collaborator' 'appointment_time', 'created_at', 'status']
+    search_fields = ['client', 'service__name']
     list_filter = ['created_at']
 
 
