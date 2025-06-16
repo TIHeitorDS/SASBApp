@@ -6,7 +6,7 @@ export default function Appointment() {
     <>
       <Table />
 
-      <NavButton path="servicos" text="Novo Agendamento" />
+      <NavButton path="/cadastrar-agendamento" text="Novo Agendamento" />
     </>
   );
 }

@@ -6,7 +6,7 @@ export default function Services() {
     <>
       <ServicesTable />
 
-      <NavButton path="/novo-servico" text="Novo Serviço" />
+      <NavButton path="/cadastrar-servico" text="Novo Serviço" />
     </>
   );
 }

@@ -8,6 +8,9 @@ import Appointment from "./pages/appointment.tsx";
 import Layout from "./ui/dashboard.tsx";
 import Services from "./pages/services.tsx";
 import Team from "./pages/team.tsx";
+import CadasterAppointment from "./pages/cadaster-appointment.tsx";
+import CadasterService from "./pages/cadaster-service.tsx";
+import CadasterWorker from "./pages/cadaster-worker.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -21,6 +24,12 @@ createRoot(document.getElementById("root")!).render(
           <Route index path="agendamentos" element={<Appointment />} />
           <Route path="servicos" element={<Services />} />
           <Route path="equipe" element={<Team />} />
+          <Route
+            path="cadastrar-agendamento"
+            element={<CadasterAppointment />}
+          />
+          <Route path="cadastrar-servico" element={<CadasterService />} />
+          <Route path="cadastrar-funcionario" element={<CadasterWorker />} />
         </Route>
       </Routes>
     </Router>
