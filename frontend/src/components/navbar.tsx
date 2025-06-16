@@ -137,13 +137,22 @@ export default function Navbar() {
           >
             Equipe
           </NavLink>
-          <div className="flex items-center gap-2 mt-4">
+          <div className="w-full flex items-center gap-2 mt-4">
             <img
               src={userProfile}
               alt="foto de perfil do usuário"
               className="w-8 h-8 rounded-full"
             />
             <p>Maria</p>
+
+            <div className="ml-auto">
+              <Link
+                to="/login"
+                className="bg-black text-white px-12 text-center py-1.5"
+              >
+                Sair
+              </Link>
+            </div>
           </div>
         </div>
       )}
