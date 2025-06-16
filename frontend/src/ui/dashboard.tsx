@@ -1,7 +1,18 @@
+import { useEffect } from "react";
 import Navbar from "../components/navbar";
 import { Outlet } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 export default function Layout() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      navigate("/agendamentos");
+    }
+  }, [location]);
+
   return (
     <>
       <Navbar />

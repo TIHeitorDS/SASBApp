@@ -11,6 +11,7 @@ import Team from "./pages/team.tsx";
 import CadasterAppointment from "./pages/cadaster-appointment.tsx";
 import CadasterService from "./pages/cadaster-service.tsx";
 import CadasterWorker from "./pages/cadaster-worker.tsx";
+import PageNotFound from "./pages/page-not-found.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -31,6 +32,8 @@ createRoot(document.getElementById("root")!).render(
           <Route path="cadastrar-servico" element={<CadasterService />} />
           <Route path="cadastrar-funcionario" element={<CadasterWorker />} />
         </Route>
+
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Router>
   </StrictMode>
