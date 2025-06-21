@@ -30,8 +30,6 @@ class Collaborator(User):
     Model representing a collaborator who can provide services.
     Inherits from the custom User model.
     """
-    phone = models.CharField(max_length=20, blank=True, null=True)
-    is_active = models.BooleanField(default=True, help_text="Indica se o colaborador está ativo")
 
     class Meta:
         # Add these to avoid clashes with auth.User
@@ -67,7 +65,7 @@ class Service(models.Model):
     """
     name = models.CharField(max_length=255, unique=True)
     duration = models.IntegerField(help_text="Duração do serviço em minutos")
-    price = models.CharField(max_length=20, help_text="Preço em reais")
+    price = models.FloatField(help_text="Preço em reais")
 
     def __str__(self):
         return self.name
@@ -93,11 +91,11 @@ class Appointment(models.Model):
     appointment_time = models.ForeignKey(AppointmentTime, on_delete=models.CASCADE)
     client = models.CharField(max_length=255, blank=True, null=True)
     client_phone = models.CharField(max_length=20, blank=True, null=True)
-    collaborator = models.CharField(max_length=255, blank=True, null=True)
+    professional = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default='pending', choices=[
         ('pendente', 'Pendente'),
-        ('confirmado', 'Confirmado'),
+        ('reservado', 'Reservado'),
         ('cancelado', 'Cancelado'),
     ])
 
