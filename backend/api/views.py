@@ -3,14 +3,10 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
-# ALTERADO: Importações alinhadas com o novo models.py
 from .models import Service, Appointment, User 
-# ALTERADO: Importações de Serializers que vamos precisar (você precisará criar/ajustar o UserSerializer)
 from .serializers import ServiceSerializer, AppointmentSerializer, UserSerializer 
 
 
-# --- VIEWSETS AJUSTADAS E CORRIGIDAS ---
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -28,7 +24,6 @@ class UserViewSet(viewsets.ModelViewSet):
         queryset = User.objects.all().order_by('first_name')
         role = self.request.query_params.get('role')
         if role:
-            # Filtra por 'ADMIN' ou 'COLLAB' de forma segura
             if role.upper() in User.Role.values:
                 queryset = queryset.filter(role=role.upper())
         return queryset
@@ -45,7 +40,6 @@ class ServiceViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly] # Apenas usuários autenticados podem criar/editar
 
     def get_queryset(self):
-        # Filtra para mostrar apenas serviços ativos para usuários não-admins
         if self.request.user.is_staff:
             return Service.objects.all()
         return Service.objects.filter(is_active=True)
@@ -98,5 +92,3 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-# REMOVIDO: O AppointmentTimeViewSet foi removido pois o modelo não existe mais.
-# REMOVIDO: O CollaboratorViewSet foi substituído pelo UserViewSet.

@@ -7,7 +7,6 @@ from django.core.exceptions import ValidationError
 from .models import User, Administrator, Collaborator, Service, Appointment
 
 # --- Admin para o modelo base User ---
-# Este admin mostra TODOS os usuários e é útil para uma visão geral.
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     list_display = ('username', 'email', 'first_name', 'role', 'is_staff')
@@ -22,7 +21,6 @@ class CustomUserAdmin(UserAdmin):
         ('Datas Importantes', {'fields': ('last_login', 'date_joined')}),
     )
 
-# --- Admin específico para o Proxy Model Administrator ---
 @admin.register(Administrator)
 class AdministratorAdmin(admin.ModelAdmin):
     list_display = ('username', 'email', 'first_name', 'is_staff', 'is_superuser')
@@ -30,10 +28,9 @@ class AdministratorAdmin(admin.ModelAdmin):
     ordering = ('username',)
     
     def get_queryset(self, request):
-        # A MÁGICA ACONTECE AQUI: Filtra para mostrar apenas usuários com o papel ADMIN.
         return super().get_queryset(request).filter(role=User.Role.ADMIN)
 
-# --- Admin específico para o Proxy Model Collaborator ---
+
 @admin.register(Collaborator)
 class CollaboratorAdmin(admin.ModelAdmin):
     list_display = ('username', 'email', 'first_name', 'is_active')
@@ -42,10 +39,7 @@ class CollaboratorAdmin(admin.ModelAdmin):
     ordering = ('username',)
     
     def get_queryset(self, request):
-        # Filtra para mostrar apenas usuários com o papel COLLABORATOR.
         return super().get_queryset(request).filter(role=User.Role.COLLABORATOR)
-
-# --- Formulários e Admins para Service e Appointment (Seu código já estava ótimo) ---
 
 class ServiceAdminForm(forms.ModelForm):
     class Meta:
@@ -54,7 +48,6 @@ class ServiceAdminForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Filtra para que apenas Admins possam ser selecionados como 'created_by'
         if 'created_by' in self.fields:
             self.fields['created_by'].queryset = User.objects.filter(role=User.Role.ADMIN)
 
@@ -81,7 +74,6 @@ class AppointmentAdminForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Filtra para que apenas Colaboradores possam ser selecionados para um agendamento
         self.fields['collaborator'].queryset = User.objects.filter(role=User.Role.COLLABORATOR, is_active=True)
 
 @admin.register(Appointment)
