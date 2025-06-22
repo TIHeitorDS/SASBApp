@@ -13,7 +13,7 @@ class User(AbstractUser):
         EMPLOYEE = 'EMPLOYEE', 'Funcionário' 
 
     role = models.CharField(
-        max_length=7, choices=Role.choices, default=Role.EMPLOYEE) 
+        max_length=8, choices=Role.choices, default=Role.EMPLOYEE) 
     phone = models.CharField(max_length=20, blank=True)
 
     def is_admin(self):
