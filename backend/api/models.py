@@ -29,7 +29,7 @@ class User(AbstractUser):
 
     def delete(self, *args, **kwargs):
         super().delete(*args, **kwargs)
-        
+
     class Meta:
         verbose_name = 'Usuário'
         verbose_name_plural = 'Usuários'
@@ -122,11 +122,16 @@ class Appointment(models.Model):
     def clean(self):
         super().clean()
 
-        if not self.service or not self.start_time:
-            return
+        if not hasattr(self, 'service') or not self.service:
+            raise ValidationError({'service': 'Serviço é obrigatório.'})
 
-        self.end_time = self.start_time + \
-            timedelta(minutes=self.service.duration)
+        if not hasattr(self, 'employee') or not self.employee:
+            raise ValidationError({'employee': 'Funcionário é obrigatório.'})
+
+        if not self.start_time:
+            raise ValidationError({'start_time': 'Data e hora são obrigatórias.'})
+
+        self.end_time = self.start_time + timedelta(minutes=self.service.duration)
 
         if self.start_time < timezone.now():
             raise ValidationError(
@@ -138,7 +143,7 @@ class Appointment(models.Model):
             start_time__lt=self.end_time,
             end_time__gt=self.start_time,
             status=Appointment.Status.RESERVED
-        ).exclude(pk=self.pk)
+        ).exclude(pk=getattr(self, 'pk', None))
 
         if conflicting.exists():
             raise ValidationError(
@@ -151,21 +156,17 @@ class Appointment(models.Model):
 
     def cancel(self, *args, **kwargs):
         if self.status != self.Status.RESERVED:
-            raise ValidationError(
-                "Só é possível cancelar agendamentos reservados.")
+            raise ValidationError("Só é possível cancelar agendamentos reservados.")
         if timezone.now() > self.start_time:
-            raise ValidationError(
-                "Não é possível cancelar agendamentos passados.")
+            raise ValidationError("Não é possível cancelar agendamentos passados.")
         self.status = self.Status.CANCELLED
         self.save(*args, **kwargs)
 
     def complete(self, *args, **kwargs):
         if self.status != self.Status.RESERVED:
-            raise ValidationError(
-                "Só é possível concluir agendamentos reservados.")
+            raise ValidationError("Só é possível concluir agendamentos reservados.")
         if timezone.now() < self.start_time:
-            raise ValidationError(
-                "Não é possível concluir agendamentos futuros.")
+            raise ValidationError("Não é possível concluir agendamentos futuros.")
         self.status = self.Status.COMPLETED
         self.save(*args, **kwargs)
 

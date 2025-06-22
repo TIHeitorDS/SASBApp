@@ -124,10 +124,22 @@ class ServiceViewSet(viewsets.ModelViewSet):
 
 class AppointmentViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentSerializer
-    permission_classes = [permissions.IsAdminUser]
+    
+    def get_permissions(self):
+        if self.action in ['create', 'list', 'retrieve', 'cancel', 'complete']:
+            return [permissions.IsAuthenticated()]
+        return [permissions.IsAdminUser()]
 
     def get_queryset(self):
-        return Appointment.objects.select_related('service', 'employee')
+        queryset = Appointment.objects.select_related('service', 'employee')
+        
+        # Filtros adicionais para não-admins
+        if not self.request.user.is_staff:
+            queryset = queryset.filter(
+                employee=self.request.user,
+                status=Appointment.Status.RESERVED
+            )
+        return queryset
 
     @action(detail=True, methods=['post'])
     def cancel(self, request, pk=None):

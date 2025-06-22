@@ -4,6 +4,8 @@ from rest_framework.validators import UniqueValidator
 from django.db import transaction
 from django.utils import timezone
 from .models import User, Service, Appointment
+from datetime import timedelta  
+from django.core.exceptions import ValidationError
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -62,7 +64,7 @@ class EmployeeSerializer(UserSerializer):
         if not data.get('first_name'):
             raise serializers.ValidationError({"first_name": "Este campo é obrigatório"})
         return data
-        
+
     class Meta(UserSerializer.Meta):
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password']
         extra_kwargs = {
@@ -126,14 +128,28 @@ class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = ['id', 'client_name', 'client_contact', 'start_time',
-                  'end_time', 'status', 'notes', 'service', 'employee',
-                  'service_id', 'employee_id']
+                'end_time', 'status', 'notes', 'service', 'employee',
+                'service_id', 'employee_id']
         read_only_fields = ['end_time', 'status']
 
     def validate(self, data):
+        # Validação básica dos campos obrigatórios
+        required_fields = ['client_name', 'client_contact', 'service', 'employee', 'start_time']
+        for field in required_fields:
+            if field not in data or not data[field]:
+                raise serializers.ValidationError({field: "Este campo é obrigatório."})
+
+        # Cria uma instância temporária para validação
         instance = Appointment(**data)
+        instance.end_time = instance.start_time + timedelta(minutes=instance.service.duration)
+        
         try:
             instance.clean()
         except ValidationError as e:
             raise serializers.ValidationError(e.message_dict)
+        
         return data
+
+    def create(self, validated_data):
+        validated_data['status'] = Appointment.Status.RESERVED
+        return super().create(validated_data)
