@@ -4,7 +4,7 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Service, Appointment, User 
-from .serializers import ServiceSerializer, AppointmentSerializer, UserSerializer 
+from .serializers import ServiceSerializer, AdministratorSerializer, CollaboratorSerializer, AppointmentSerializer, UserSerializer 
 
 
 
@@ -27,6 +27,30 @@ class UserViewSet(viewsets.ModelViewSet):
             if role.upper() in User.Role.values:
                 queryset = queryset.filter(role=role.upper())
         return queryset
+    
+class AdministratorViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para Administradores.
+    - Permite criar, listar, atualizar e excluir administradores.
+    - Apenas usuários autenticados com permissão de administrador podem acessar.
+    """
+    serializer_class = AdministratorSerializer
+    permission_classes = [permissions.IsAdminUser] # Apenas Admins podem gerenciar administradores
+
+    def get_queryset(self):
+        return User.objects.filter(role=User.Role.ADMIN).order_by('first_name')
+    
+class CollaboratorViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para Colaboradores.
+    - Permite criar, listar, atualizar e excluir colaboradores.
+    - Apenas usuários autenticados com permissão de administrador podem acessar.
+    """
+    serializer_class = CollaboratorSerializer
+    permission_classes = [permissions.IsAdminUser] # Apenas Admins podem gerenciar colaboradores
+
+    def get_queryset(self):
+        return User.objects.filter(role=User.Role.COLLABORATOR).order_by('first_name')
 
 
 class ServiceViewSet(viewsets.ModelViewSet):

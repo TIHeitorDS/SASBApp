@@ -58,8 +58,6 @@ class Service(models.Model):
     )
     price = models.DecimalField(max_digits=7, decimal_places=2)
     is_active = models.BooleanField(default=True)
-    created_by = models.ForeignKey(
-        User, on_delete=models.PROTECT, related_name='services_created')
 
     def __str__(self):
         return self.name
@@ -117,8 +115,8 @@ class Appointment(models.Model):
             original = Appointment.objects.get(pk=self.pk)
 
         def save(self, *args, **kwargs):
-        self.full_clean()
-        super().save(*args, **kwargs)
+            self.full_clean()
+            super().save(*args, **kwargs)
 
     def cancel(self):
         if self.status == self.Status.RESERVED and self.start_time > timezone.now():

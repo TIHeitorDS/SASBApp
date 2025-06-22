@@ -54,9 +54,7 @@ class ServiceAdminForm(forms.ModelForm):
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
     form = ServiceAdminForm
-    list_display = ('name', 'duration', 'price', 'is_active', 'created_by')
-    list_editable = ('is_active',)
-    list_filter = ('is_active', 'created_by__username')
+    list_display = ('name', 'duration', 'price')
     search_fields = ('name',)
     
     def save_model(self, request, obj, form, change):

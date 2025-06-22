@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 from django.db import transaction
-from .models import User, Service, Appointment
+from .models import User, Administrator, Collaborator, Service, Appointment
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -42,19 +42,44 @@ class UserSerializer(serializers.ModelSerializer):
 
         return super().update(instance, validated_data)
 
+class AdministratorSerializer(UserSerializer):
+    """
+    NOVO: Serializer para o modelo Administrator.
+    Herda de UserSerializer e define o papel como ADMIN.
+    """
+    class Meta(UserSerializer.Meta):
+        model = Administrator
+        fields = UserSerializer.Meta.fields + ['is_staff', 'is_superuser']
+        read_only_fields = UserSerializer.Meta.read_only_fields + ['is_staff', 'is_superuser']
+
+    def create(self, validated_data):
+        validated_data['role'] = User.Role.ADMIN
+        return super().create(validated_data)
+
+ 
+class CollaboratorSerializer(UserSerializer):
+    """
+    NOVO: Serializer para o modelo Collaborator.
+    Herda de UserSerializer e define o papel como COLLABORATOR.
+    """
+    class Meta(UserSerializer.Meta):
+        model = Collaborator
+        fields = UserSerializer.Meta.fields + ['is_staff']
+        read_only_fields = UserSerializer.Meta.read_only_fields + ['is_staff']
+
+    def create(self, validated_data):
+        validated_data['role'] = User.Role.COLLABORATOR
+        return super().create(validated_data)
 
 class ServiceSerializer(serializers.ModelSerializer):
     """
     ALTERADO: Serializer para o modelo Service.
     Mostra quem criou o serviço.
     """
-    created_by = UserSerializer(read_only=True)
-
     class Meta:
         model = Service
         fields = [
             'id', 'name', 'duration', 'price',
-            'is_active', 'created_by'
         ]
 
 
