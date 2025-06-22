@@ -99,33 +99,54 @@ class Appointment(models.Model):
     service = models.ForeignKey(
         Service,
         on_delete=models.PROTECT,
-        related_name='appointments'
+        related_name='appointments',
+        verbose_name='Serviço'
     )
     employee = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
-        limit_choices_to={'role': User.Role.EMPLOYEE}
+        limit_choices_to={'role': User.Role.EMPLOYEE},
+        verbose_name='Funcionário'
     )
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField(editable=False)
-    client_name = models.CharField(max_length=100, blank=False)
-    client_contact = models.CharField(max_length=100, blank=False)
+    start_time = models.DateTimeField('Data/Hora de Início')
+    end_time = models.DateTimeField('Data/Hora de Término', editable=False)
+    client_name = models.CharField('Nome do Cliente', max_length=100)
+    client_contact = models.CharField('Contato do Cliente', max_length=100)
     status = models.CharField(
+        'Status',
         max_length=10,
         choices=Status.choices,
         default=Status.RESERVED
     )
-    notes = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    notes = models.TextField('Observações', blank=True)
+    created_at = models.DateTimeField('Criado em', auto_now_add=True)
+    updated_at = models.DateTimeField('Atualizado em', auto_now=True)
+
+    class Meta:
+        verbose_name = 'Agendamento'
+        verbose_name_plural = 'Agendamentos'
+        ordering = ['start_time']
+
+    def save(self, *args, **kwargs):
+        """Salva o agendamento com validações apropriadas"""
+        skip_validation = kwargs.pop('skip_validation', False)
+        
+        if not skip_validation:
+            self.full_clean()
+        
+        if not self.end_time:
+            self.end_time = self.start_time + timedelta(minutes=self.service.duration)
+        
+        super().save(*args, **kwargs)
 
     def clean(self):
+        """Validações completas do agendamento"""
         super().clean()
 
-        if not hasattr(self, 'service') or not self.service:
+        if not self.service_id:
             raise ValidationError({'service': 'Serviço é obrigatório.'})
 
-        if not hasattr(self, 'employee') or not self.employee:
+        if not self.employee_id:
             raise ValidationError({'employee': 'Funcionário é obrigatório.'})
 
         if not self.start_time:
@@ -133,7 +154,17 @@ class Appointment(models.Model):
 
         self.end_time = self.start_time + timedelta(minutes=self.service.duration)
 
-        if self.status != self.Status.COMPLETED and self.start_time < timezone.now():
+        if self.status == self.Status.RESERVED:
+            self._validate_reserved_appointment()
+        elif self.status == self.Status.COMPLETED:
+            self._validate_completed_appointment()
+        elif self.status == self.Status.CANCELLED:
+            self._validate_cancelled_appointment()
+
+    def _validate_reserved_appointment(self):
+        """Validações específicas para agendamentos reservados"""
+        if (not self.pk and self.start_time < timezone.now()) or \
+           (self.pk and self.status == self.Status.RESERVED and self.start_time < timezone.now()):
             raise ValidationError(
                 {'start_time': "Não é possível agendar para horários passados."}
             )
@@ -142,7 +173,7 @@ class Appointment(models.Model):
             employee=self.employee,
             start_time__lt=self.end_time,
             end_time__gt=self.start_time,
-            status=Appointment.Status.RESERVED
+            status=self.Status.RESERVED
         ).exclude(pk=getattr(self, 'pk', None))
 
         if conflicting.exists():
@@ -150,29 +181,35 @@ class Appointment(models.Model):
                 {'start_time': "O funcionário já possui um agendamento neste horário."}
             )
 
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super().save(*args, **kwargs)
+    def _validate_completed_appointment(self):
+        """Validações específicas para agendamentos completos"""
+        pass
 
-    def cancel(self, *args, **kwargs):
-        if self.status != self.Status.RESERVED:
-            raise ValidationError(
-                "Só é possível cancelar agendamentos reservados.")
-        if timezone.now() > self.start_time:
-            raise ValidationError(
-                "Não é possível cancelar agendamentos passados.")
-        self.status = self.Status.CANCELLED
-        self.save(*args, **kwargs)
+    def _validate_cancelled_appointment(self):
+        """Validações específicas para agendamentos cancelados"""
+        pass
 
-    def complete(self, *args, **kwargs):
+    def complete(self):
+        """Marca o agendamento como concluído"""
         if self.status != self.Status.RESERVED:
-            raise ValidationError(
-                "Só é possível concluir agendamentos reservados.")
+            raise ValidationError("Só é possível concluir agendamentos reservados.")
+
         if timezone.now() < self.start_time:
-            raise ValidationError(
-                "Não é possível concluir agendamentos futuros.")
+            raise ValidationError("Não é possível concluir agendamentos futuros.")
+
         self.status = self.Status.COMPLETED
-        self.save(*args, **kwargs)
+        self.save()
+
+    def cancel(self):
+        """Cancela o agendamento"""
+        if self.status != self.Status.RESERVED:
+            raise ValidationError("Só é possível cancelar agendamentos reservados.")
+
+        if timezone.now() > self.start_time:
+            raise ValidationError("Não é possível cancelar agendamentos passados.")
+
+        self.status = self.Status.CANCELLED
+        self.save()
 
     def __str__(self):
         return f"{self.client_name} - {self.service.name} ({self.start_time.strftime('%d/%m/%Y %H:%M')})"
