@@ -9,6 +9,7 @@ from django.utils import timezone
 from .models import Service, Appointment, User
 from .serializers import ServiceSerializer, EmployeeSerializer, AppointmentSerializer, UserSerializer
 from django.db.models import Q
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -125,6 +126,36 @@ class ServiceViewSet(viewsets.ModelViewSet):
 
 class AppointmentViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentSerializer
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
+    search_fields = ['client_name', 'client_contact']
+    filterset_fields = ['status', 'employee', 'service']
+
+    def get_queryset(self):
+        queryset = Appointment.objects.select_related('service', 'employee')
+        
+        # Filtro por status
+        status = self.request.query_params.get('status')
+        if status:
+            if status not in dict(Appointment.Status.choices):
+                raise ValidationError({'status': 'Status inválido'})
+            queryset = queryset.filter(status=status)
+        
+        # Filtros para não-admins
+        if not self.request.user.is_staff:
+            queryset = queryset.filter(
+                Q(employee=self.request.user) |
+                Q(status=Appointment.Status.RESERVED)
+            )
+        
+        return queryset.order_by('start_time')
+
+    def handle_exception(self, exc):
+        if isinstance(exc, ValidationError):
+            return Response(
+                {'status': 'error', 'message': exc.message_dict},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        return super().handle_exception(exc)
 
     def get_permissions(self):
         if self.action in ['create', 'list', 'retrieve', 'update', 'partial_update', 'cancel', 'complete']:

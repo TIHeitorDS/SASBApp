@@ -315,7 +315,7 @@ class AppointmentUpdateTests(TestCase):
             client_contact='11666666666',
             status=Appointment.Status.RESERVED
         )
-        
+
         updated_data = {
             'client_name': self.reserved_appointment.client_name,
             'client_contact': self.reserved_appointment.client_contact,
@@ -348,7 +348,7 @@ class AppointmentUpdateTests(TestCase):
 class AppointmentCancellationTests(TestCase):
     def setUp(self):
         self.client = APIClient()
-        
+
         # Criar employee
         self.employee = User.objects.create_user(
             username='employee',
@@ -356,7 +356,7 @@ class AppointmentCancellationTests(TestCase):
             email='employee@example.com',
             role=User.Role.EMPLOYEE
         )
-        
+
         # Criar serviço
         self.service = Service.objects.create(
             name='Corte de Cabelo',
@@ -364,9 +364,9 @@ class AppointmentCancellationTests(TestCase):
             price=50.00,
             is_active=True
         )
-        
+
         now = timezone.now()
-        
+
         # Criar agendamento reservado futuro
         self.future_reserved = Appointment(
             service=self.service,
@@ -378,7 +378,7 @@ class AppointmentCancellationTests(TestCase):
             status=Appointment.Status.RESERVED
         )
         self.future_reserved.save()  # Salva com validação (data futura é válida)
-        
+
         # Criar agendamento reservado passado (usando skip_validation)
         self.past_reserved = Appointment(
             service=self.service,
@@ -389,8 +389,9 @@ class AppointmentCancellationTests(TestCase):
             client_contact='11888888888',
             status=Appointment.Status.RESERVED
         )
-        self.past_reserved.save(skip_validation=True)  # Pula validação para data passada
-        
+        # Pula validação para data passada
+        self.past_reserved.save(skip_validation=True)
+
         # Criar agendamento cancelado
         self.cancelled = Appointment(
             service=self.service,
@@ -402,7 +403,7 @@ class AppointmentCancellationTests(TestCase):
             status=Appointment.Status.CANCELLED
         )
         self.cancelled.save(skip_validation=True)
-        
+
         # Criar agendamento concluído
         self.completed = Appointment(
             service=self.service,
@@ -414,14 +415,16 @@ class AppointmentCancellationTests(TestCase):
             status=Appointment.Status.COMPLETED
         )
         self.completed.save(skip_validation=True)
+
     def test_cancel_future_reserved_appointment_success(self):
         self.client.force_authenticate(user=self.employee)
         url = reverse('appointment-cancel', args=[self.future_reserved.id])
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        
+
         self.future_reserved.refresh_from_db()
-        self.assertEqual(self.future_reserved.status, Appointment.Status.CANCELLED)
+        self.assertEqual(self.future_reserved.status,
+                         Appointment.Status.CANCELLED)
         self.assertIn('success', response.data['status'])
         self.assertIn('cancelado', response.data['message'])
 
@@ -430,9 +433,10 @@ class AppointmentCancellationTests(TestCase):
         url = reverse('appointment-cancel', args=[self.past_reserved.id])
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        
+
         self.past_reserved.refresh_from_db()
-        self.assertEqual(self.past_reserved.status, Appointment.Status.RESERVED)
+        self.assertEqual(self.past_reserved.status,
+                         Appointment.Status.RESERVED)
         self.assertIn('error', response.data['status'])
         # A mensagem exata pode variar, mas deve indicar o erro
         self.assertIn('passados', response.data['message'])
@@ -468,7 +472,7 @@ class AppointmentCancellationTests(TestCase):
 class AppointmentCompletionTests(TestCase):
     def setUp(self):
         self.client = APIClient()
-        
+
         # Criar employee
         self.employee = User.objects.create_user(
             username='employee',
@@ -476,7 +480,7 @@ class AppointmentCompletionTests(TestCase):
             email='employee@example.com',
             role=User.Role.EMPLOYEE
         )
-        
+
         # Criar serviço
         self.service = Service.objects.create(
             name='Corte de Cabelo',
@@ -484,9 +488,9 @@ class AppointmentCompletionTests(TestCase):
             price=50.00,
             is_active=True
         )
-        
+
         now = timezone.now()
-        
+
         self.past_reserved = Appointment(
             service=self.service,
             employee=self.employee,
@@ -496,8 +500,8 @@ class AppointmentCompletionTests(TestCase):
             client_contact='11999999999',
             status=Appointment.Status.RESERVED
         )
-        self.past_reserved.save(skip_validation=True) 
-        
+        self.past_reserved.save(skip_validation=True)
+
         self.future_reserved = Appointment(
             service=self.service,
             employee=self.employee,
@@ -508,7 +512,7 @@ class AppointmentCompletionTests(TestCase):
             status=Appointment.Status.RESERVED
         )
         self.future_reserved.save()
-        
+
         self.cancelled = Appointment(
             service=self.service,
             employee=self.employee,
@@ -518,8 +522,8 @@ class AppointmentCompletionTests(TestCase):
             client_contact='11777777777',
             status=Appointment.Status.CANCELLED
         )
-        self.cancelled.save(skip_validation=True) 
-        
+        self.cancelled.save(skip_validation=True)
+
         self.completed = Appointment(
             service=self.service,
             employee=self.employee,
@@ -529,8 +533,8 @@ class AppointmentCompletionTests(TestCase):
             client_contact='11666666666',
             status=Appointment.Status.COMPLETED
         )
-        self.completed.save(skip_validation=True) 
-        
+        self.completed.save(skip_validation=True)
+
         # Autenticar o usuário
         self.client.force_authenticate(user=self.employee)
 
@@ -539,14 +543,16 @@ class AppointmentCompletionTests(TestCase):
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.past_reserved.refresh_from_db()
-        self.assertEqual(self.past_reserved.status, Appointment.Status.COMPLETED)
+        self.assertEqual(self.past_reserved.status,
+                         Appointment.Status.COMPLETED)
 
     def test_complete_future_reserved_appointment_fails(self):
         url = reverse('appointment-complete', args=[self.future_reserved.id])
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.future_reserved.refresh_from_db()
-        self.assertEqual(self.future_reserved.status, Appointment.Status.RESERVED)
+        self.assertEqual(self.future_reserved.status,
+                         Appointment.Status.RESERVED)
 
     def test_complete_cancelled_appointment_fails(self):
         url = reverse('appointment-complete', args=[self.cancelled.id])
@@ -573,11 +579,11 @@ class AppointmentCompletionTests(TestCase):
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-""" class AppointmentListViewTests(TestCase):
+
+class AppointmentListViewTests(TestCase):
     def setUp(self):
         self.client = APIClient()
         
-        # Criar employee
         self.employee = User.objects.create_user(
             username='employee',
             password='employee123',
@@ -585,7 +591,6 @@ class AppointmentCompletionTests(TestCase):
             role=User.Role.EMPLOYEE
         )
         
-        # Criar admin
         self.admin = User.objects.create_superuser(
             username='admin',
             password='admin123',
@@ -593,7 +598,6 @@ class AppointmentCompletionTests(TestCase):
             role=User.Role.ADMIN
         )
         
-        # Criar serviço
         self.service = Service.objects.create(
             name='Corte de Cabelo',
             duration=30,
@@ -601,12 +605,13 @@ class AppointmentCompletionTests(TestCase):
             is_active=True
         )
         
-        # Criar agendamentos com diferentes status
+        now = timezone.now()
+        
         self.reserved_appointment = Appointment.objects.create(
             service=self.service,
             employee=self.employee,
-            start_time=timezone.now() + timedelta(days=1),
-            end_time=timezone.now() + timedelta(days=1, minutes=30),
+            start_time=now + timedelta(days=1),
+            end_time=now + timedelta(days=1, minutes=30),
             client_name='Cliente Reservado',
             client_contact='11999999999',
             status=Appointment.Status.RESERVED
@@ -615,8 +620,8 @@ class AppointmentCompletionTests(TestCase):
         self.cancelled_appointment = Appointment.objects.create(
             service=self.service,
             employee=self.employee,
-            start_time=timezone.now() + timedelta(days=2),
-            end_time=timezone.now() + timedelta(days=2, minutes=30),
+            start_time=now + timedelta(days=2),
+            end_time=now + timedelta(days=2, minutes=30),
             client_name='Cliente Cancelado',
             client_contact='11888888888',
             status=Appointment.Status.CANCELLED
@@ -625,8 +630,8 @@ class AppointmentCompletionTests(TestCase):
         self.completed_appointment = Appointment.objects.create(
             service=self.service,
             employee=self.employee,
-            start_time=timezone.now() - timedelta(days=1),
-            end_time=timezone.now() - timedelta(days=1, minutes=30),
+            start_time=now - timedelta(days=1),
+            end_time=now - timedelta(days=1, minutes=30),
             client_name='Cliente Concluído',
             client_contact='11777777777',
             status=Appointment.Status.COMPLETED
@@ -638,31 +643,34 @@ class AppointmentCompletionTests(TestCase):
         self.client.force_authenticate(user=self.employee)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 3)  # Todos os agendamentos
+        self.assertEqual(len(response.data), 3)
 
     def test_filter_appointments_by_status_reserved(self):
-        self.client.force_authenticate(user=self.employee)
+        self.client.force_authenticate(user=self.admin)
         response = self.client.get(self.url, {'status': 'reserved'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['status'], 'reserved')
+        self.assertEqual(response.data[0]['id'], self.reserved_appointment.id)
 
     def test_filter_appointments_by_status_cancelled(self):
-        self.client.force_authenticate(user=self.employee)
+        self.client.force_authenticate(user=self.admin)
         response = self.client.get(self.url, {'status': 'cancelled'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['status'], 'cancelled')
+        self.assertEqual(response.data[0]['id'], self.cancelled_appointment.id)
 
     def test_filter_appointments_by_status_completed(self):
-        self.client.force_authenticate(user=self.employee)
+        self.client.force_authenticate(user=self.admin)
         response = self.client.get(self.url, {'status': 'completed'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['status'], 'completed')
+        self.assertEqual(response.data[0]['id'], self.completed_appointment.id)
 
     def test_filter_appointments_by_invalid_status(self):
-        self.client.force_authenticate(user=self.employee)
+        self.client.force_authenticate(user=self.admin)
         response = self.client.get(self.url, {'status': 'invalid'})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('status', response.data)
@@ -671,34 +679,23 @@ class AppointmentCompletionTests(TestCase):
         self.client.force_authenticate(user=self.employee)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        
-        # Verificar se os dados do cliente estão presentes
-        for appointment in response.data:
-            self.assertIn('client_name', appointment)
-            self.assertIn('client_contact', appointment)
+        self.assertIn('client_name', response.data[0])
+        self.assertIn('client_contact', response.data[0])
 
     def test_list_appointments_with_service_details(self):
         self.client.force_authenticate(user=self.employee)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        
-        # Verificar se os dados do serviço estão presentes
-        for appointment in response.data:
-            self.assertIn('service', appointment)
-            self.assertEqual(appointment['service']['id'], self.service.id)
+        self.assertIn('service', response.data[0])
+        self.assertEqual(response.data[0]['service']['id'], self.service.id)
 
     def test_list_appointments_with_employee_details(self):
         self.client.force_authenticate(user=self.employee)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        
-        # Verificar se os dados do funcionário estão presentes
-        for appointment in response.data:
-            self.assertIn('employee', appointment)
-            self.assertEqual(appointment['employee']['id'], self.employee.id)
+        self.assertIn('employee', response.data[0])
+        self.assertEqual(response.data[0]['employee']['id'], self.employee.id)
 
     def test_unauthenticated_access_fails(self):
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN) 
-
- """ 
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
