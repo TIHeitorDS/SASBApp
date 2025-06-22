@@ -1,0 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Syne:wght@400..800&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-syne: Syne, sans-serif;
+  --font-montserrat: Montserrat, sans-serif;
+  --color-black: #1e1e1e;
+  --color-white-secondary: #fffbf2;
+  --color-pink: #b490f0;
+  --color-gray: #cecccc;
+  --color-gray-secondary: #1e1e1e;
+  --color-gray-tertiary: #aaa5a5;
+}
