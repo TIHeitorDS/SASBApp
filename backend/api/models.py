@@ -27,6 +27,9 @@ class User(AbstractUser):
             self.is_staff = True
         super().save(*args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        
     class Meta:
         verbose_name = 'Usuário'
         verbose_name_plural = 'Usuários'

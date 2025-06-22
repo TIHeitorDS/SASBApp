@@ -1,5 +1,6 @@
 # api/serializers
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from django.db import transaction
 from django.utils import timezone
 from .models import User, Service, Appointment
@@ -9,28 +10,71 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'first_name', 'last_name',
-                  'email', 'phone', 'role', 'is_staff', 'is_active']
-        read_only_fields = ['is_staff', 'is_active']
+                 'email', 'phone', 'role', 'is_staff', 'is_active']
+        read_only_fields = ['is_staff', 'is_active', 'role']
         extra_kwargs = {
-            'password': {'write_only': True, 'required': False}
+            'password': {
+                'write_only': True,
+                'required': False,
+                'min_length': 6,
+                'error_messages': {
+                    'min_length': 'A senha deve ter pelo menos 6 caracteres.'
+                }
+            },
+            'email': {
+                'required': True,
+                'validators': [UniqueValidator(queryset=User.objects.all())]
+            },
+            'first_name': {'required': True},
+            'last_name': {'required': True}
         }
 
-    def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        return user
+    def validate(self, data):
+        errors = {}
 
-    def update(self, instance, validated_data):
+        required_fields = ['first_name', 'last_name', 'email']
+        for field in required_fields:
+            if field in self.Meta.extra_kwargs.get('required_fields', []) and not data.get(field):
+                errors[field] = 'Este campo é obrigatório.'
+
+        if 'password' in data:
+            if len(data['password']) < 6:
+                errors['password'] = 'A senha deve ter pelo menos 6 caracteres.'
+
+        if errors:
+            raise serializers.ValidationError(errors)
+
+        return data
+
+    def create(self, validated_data):
         password = validated_data.pop('password', None)
+        user = User(**validated_data)
         if password:
-            instance.set_password(password)
-        return super().update(instance, validated_data)
+            user.set_password(password)
+        user.save()
+        return user
 
 
 class EmployeeSerializer(UserSerializer):
+    first_name = serializers.CharField(required=True)  # Força a validação
+
+    def validate(self, data):
+        if not data.get('first_name'):
+            raise serializers.ValidationError({"first_name": "Este campo é obrigatório"})
+        return data
+        
     class Meta(UserSerializer.Meta):
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password']
         extra_kwargs = {
-            'password': {'write_only': True, 'required': True},
-            'role': {'read_only': True}
+            **UserSerializer.Meta.extra_kwargs,
+            'password': {
+                'write_only': True,
+                'required': True,
+                'min_length': 6,
+                'error_messages': {
+                    'min_length': 'A senha deve ter pelo menos 6 caracteres.'
+                }
+            }
         }
 
     def create(self, validated_data):
