@@ -133,13 +133,11 @@ class AppointmentSerializer(serializers.ModelSerializer):
         read_only_fields = ['end_time', 'status']
 
     def validate(self, data):
-        # Validação básica dos campos obrigatórios
         required_fields = ['client_name', 'client_contact', 'service', 'employee', 'start_time']
         for field in required_fields:
             if field not in data or not data[field]:
                 raise serializers.ValidationError({field: "Este campo é obrigatório."})
 
-        # Cria uma instância temporária para validação
         instance = Appointment(**data)
         instance.end_time = instance.start_time + timedelta(minutes=instance.service.duration)
         

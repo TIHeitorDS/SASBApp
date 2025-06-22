@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from django.utils import timezone
 from .models import Service, Appointment, User
 from .serializers import ServiceSerializer, EmployeeSerializer, AppointmentSerializer, UserSerializer
+from django.db.models import Q  
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -126,20 +127,57 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentSerializer
     
     def get_permissions(self):
-        if self.action in ['create', 'list', 'retrieve', 'cancel', 'complete']:
+        if self.action in ['create', 'list', 'retrieve', 'update', 'partial_update', 'cancel', 'complete']:
             return [permissions.IsAuthenticated()]
         return [permissions.IsAdminUser()]
 
     def get_queryset(self):
         queryset = Appointment.objects.select_related('service', 'employee')
         
-        # Filtros adicionais para não-admins
+        # Filtros para não-admins
         if not self.request.user.is_staff:
             queryset = queryset.filter(
-                employee=self.request.user,
-                status=Appointment.Status.RESERVED
+                Q(employee=self.request.user) |
+                Q(status=Appointment.Status.RESERVED)
             )
         return queryset
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        
+        if not request.data:
+            return Response(
+                {'status': 'error', 'message': 'Nenhuma alteração detectada'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+    
+
+        # Verifica se o usuário tem permissão para editar
+        if not request.user.is_staff and instance.employee != request.user:
+            return Response(
+                {'status': 'error', 'message': 'Você não tem permissão para editar este agendamento.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+            
+        # Verifica se o agendamento pode ser alterado
+        if instance.status != Appointment.Status.RESERVED:
+            return Response(
+                {'status': 'error', 'message': 'Agendamento não pode ser alterado.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        # Mantém os valores originais para campos não fornecidos
+        data = request.data.copy()
+        if 'client_name' not in data:
+            data['client_name'] = instance.client_name
+        if 'client_contact' not in data:
+            data['client_contact'] = instance.client_contact
+            
+        serializer = self.get_serializer(instance, data=data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        
+        return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def cancel(self, request, pk=None):

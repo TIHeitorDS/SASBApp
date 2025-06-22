@@ -1,4 +1,4 @@
-#api/models
+# api/models
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -133,7 +133,7 @@ class Appointment(models.Model):
 
         self.end_time = self.start_time + timedelta(minutes=self.service.duration)
 
-        if self.start_time < timezone.now():
+        if self.status != self.Status.COMPLETED and self.start_time < timezone.now():
             raise ValidationError(
                 {'start_time': "Não é possível agendar para horários passados."}
             )
@@ -156,17 +156,21 @@ class Appointment(models.Model):
 
     def cancel(self, *args, **kwargs):
         if self.status != self.Status.RESERVED:
-            raise ValidationError("Só é possível cancelar agendamentos reservados.")
+            raise ValidationError(
+                "Só é possível cancelar agendamentos reservados.")
         if timezone.now() > self.start_time:
-            raise ValidationError("Não é possível cancelar agendamentos passados.")
+            raise ValidationError(
+                "Não é possível cancelar agendamentos passados.")
         self.status = self.Status.CANCELLED
         self.save(*args, **kwargs)
 
     def complete(self, *args, **kwargs):
         if self.status != self.Status.RESERVED:
-            raise ValidationError("Só é possível concluir agendamentos reservados.")
+            raise ValidationError(
+                "Só é possível concluir agendamentos reservados.")
         if timezone.now() < self.start_time:
-            raise ValidationError("Não é possível concluir agendamentos futuros.")
+            raise ValidationError(
+                "Não é possível concluir agendamentos futuros.")
         self.status = self.Status.COMPLETED
         self.save(*args, **kwargs)
 

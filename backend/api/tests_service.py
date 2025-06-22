@@ -1,4 +1,4 @@
-""" #api/tests_service.py
+#api/tests_service.py
 
 from django.test import TestCase
 from django.urls import reverse
@@ -390,4 +390,4 @@ class ServiceDeletionTests(TestCase):
         self.client.force_authenticate(user=self.admin)
         url = reverse('service-detail', args=[999])  # ID inexistente
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND) """
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
