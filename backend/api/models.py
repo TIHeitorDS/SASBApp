@@ -10,17 +10,17 @@ from django.conf import settings
 class User(AbstractUser):
     class Role(models.TextChoices):
         ADMIN = 'ADMIN', 'Administrador'
-        COLLABORATOR = 'COLLAB', 'Colaborador'
+        EMPLOYEE = 'EMPLOYEE', 'Funcionário' 
 
     role = models.CharField(
-        max_length=6, choices=Role.choices, default=Role.COLLABORATOR)
+        max_length=7, choices=Role.choices, default=Role.EMPLOYEE) 
     phone = models.CharField(max_length=20, blank=True)
 
     def is_admin(self):
         return self.role == self.Role.ADMIN
 
-    def is_collaborator(self):
-        return self.role == self.Role.COLLABORATOR
+    def is_employee(self):  
+        return self.role == self.Role.EMPLOYEE
 
 
 class Administrator(User):
@@ -35,14 +35,14 @@ class Administrator(User):
         super().save(*args, **kwargs)
 
 
-class Collaborator(User):
+class Employee(User): 
     class Meta:
         proxy = True
-        verbose_name = 'Colaborador'
-        verbose_name_plural = 'Colaboradores'
+        verbose_name = 'Funcionário' 
+        verbose_name_plural = 'Funcionários'  
 
     def save(self, *args, **kwargs):
-        self.role = User.Role.COLLABORATOR
+        self.role = User.Role.EMPLOYEE
         self.is_staff = False
         super().save(*args, **kwargs)
 
@@ -70,7 +70,7 @@ class Appointment(models.Model):
         COMPLETED = 'completed', 'Concluído'
 
     service = models.ForeignKey(Service, on_delete=models.PROTECT)
-    collaborator = models.ForeignKey(Collaborator, on_delete=models.PROTECT)
+    employee = models.ForeignKey(Employee, on_delete=models.PROTECT) 
     start_time = models.DateTimeField()
     end_time = models.DateTimeField(editable=False)
     client_name = models.CharField(max_length=100)
@@ -99,7 +99,7 @@ class Appointment(models.Model):
 
         # 3. Validação de conflitos
         conflicting = Appointment.objects.filter(
-            collaborator=self.collaborator,
+            employee=self.employee, 
             start_time__lt=self.end_time,
             end_time__gt=self.start_time,
             status=Appointment.Status.RESERVED
@@ -107,16 +107,15 @@ class Appointment(models.Model):
 
         if conflicting.exists():
             raise ValidationError(
-                {'start_time': "O colaborador já possui um agendamento neste horário."}
+                {'start_time': "O funcionário já possui um agendamento neste horário."} 
             )
 
-        # 4. validacao de status
         if self.pk and self.status != self.Status.RESERVED:
             original = Appointment.objects.get(pk=self.pk)
 
-        def save(self, *args, **kwargs):
-            self.full_clean()
-            super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
     def cancel(self):
         if self.status == self.Status.RESERVED and self.start_time > timezone.now():
