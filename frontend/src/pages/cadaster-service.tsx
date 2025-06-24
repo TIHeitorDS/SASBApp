@@ -6,7 +6,9 @@ export default function CadasterService() {
     <Layout title="Cadastrar Novo Serviço">
       <Input type="text" placeholder="Nome do Serviço" theme="black" />
 
-      <Input type="text" placeholder="Categoria" theme="black" />
+      <Input type="text" placeholder="Duração" theme="black" />
+
+      <Input type="text" placeholder="Preço" theme="black" />
     </Layout>
   );
 }

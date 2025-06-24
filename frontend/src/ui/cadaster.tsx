@@ -13,7 +13,7 @@ export default function Layout({
         {title}
       </p>
 
-      <form action="" className="grid lg:grid-cols-2 w-full gap-[27px]">
+      <form action="" className="grid lg:grid-cols-3 w-full gap-[27px]">
         {children}
       </form>
 
