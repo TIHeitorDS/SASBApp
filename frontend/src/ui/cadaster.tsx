@@ -3,9 +3,11 @@ import SubmitButton from "../components/submit-button";
 export default function Layout({
   title,
   children,
+  tableColumns = "2",
 }: {
   title: string;
   children: React.ReactNode;
+  tableColumns?: string;
 }) {
   return (
     <div className="flex flex-col justify-center items-center gap-[27px]">
@@ -13,7 +15,7 @@ export default function Layout({
         {title}
       </p>
 
-      <form action="" className="grid lg:grid-cols-3 w-full gap-[27px]">
+      <form action="" className={`grid lg:grid-cols-${tableColumns} w-full gap-[27px]`}>
         {children}
       </form>
 
