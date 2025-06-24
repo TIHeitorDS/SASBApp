@@ -1,4 +1,5 @@
 import SubmitButton from "../components/submit-button";
+import clsx from "clsx";
 
 export default function Layout({
   title,
@@ -15,7 +16,15 @@ export default function Layout({
         {title}
       </p>
 
-      <form action="" className={`grid lg:grid-cols-${tableColumns} w-full gap-[27px]`}>
+      <form
+        action=""
+        className={clsx(
+          "grid w-full gap-[27px]",
+          tableColumns === "2" && "lg:grid-cols-2",
+          tableColumns === "3" && "lg:grid-cols-3",
+          tableColumns === "4" && "lg:grid-cols-4",
+        )}
+      >
         {children}
       </form>
 
