@@ -6,7 +6,11 @@ export default function CadasterWorker() {
     <Layout title="Cadastrar Funcionário">
       <Input type="text" placeholder="Nome" theme="black" />
 
-      <Input type="text" placeholder="Formação" theme="black" />
+      <Input type="text" placeholder="Sobrenome" theme="black" />
+
+      <Input type="email" placeholder="Email" theme="black" />
+
+      <Input type="password" placeholder="Senha" theme="black" />
     </Layout>
   );
 }
