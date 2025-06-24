@@ -1,6 +1,6 @@
 export default function SelectService() {
   return (
-    <select className="border pt-[15px] pb-[17px] pl-[21px] border-[#c4c4c4] w-full focus:outline-none focus:border-pink focus:ring-1 focus:ring-pink rounded bg-transparent text-[#767575]/25 transition-all">
+    <select className="border pt-[15px] pb-[17px] pl-[21px] border-[#c4c4c4] w-full focus:outline-none focus:border-pink focus:ring-1 focus:ring-pink rounded bg-transparent text-[#767575]/80 transition-all">
       <option value="default" selected>
         Selecionar Serviço
       </option>
