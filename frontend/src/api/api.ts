@@ -19,14 +19,45 @@ apiClient.interceptors.request.use(
   }
 );
 
-export interface EmployeeData {
+export interface CreateEmployee {
+  username: string;
   first_name: string;
   last_name: string;
   email: string;
   password: string;
+  phone?: string;
 }
 
-export const createEmployee = async (employeeData: EmployeeData) => {
+export interface UpdateEmployee {
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  password?: string;
+  phone?: string;
+}
+
+export interface Employee {
+  id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone?: string;
+  role: string;
+  is_active: boolean;
+}
+
+export const getEmployees = async (): Promise<Employee[]> => {
+  try {
+    const response = await apiClient.get('/employees/');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching employees:", error);
+    throw error;
+  }
+};
+
+export const createEmployee = async (employeeData: CreateEmployee) => {
   try {
     const response = await apiClient.post('/employees/', employeeData);
     return response.data;
