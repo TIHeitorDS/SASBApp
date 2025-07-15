@@ -33,6 +33,7 @@ export interface UpdateEmployee {
   last_name?: string;
   email?: string;
   password?: string;
+  username?: string;
   phone?: string;
 }
 
@@ -53,6 +54,26 @@ export const getEmployees = async (): Promise<Employee[]> => {
     return response.data;
   } catch (error) {
     console.error("Error fetching employees:", error);
+    throw error;
+  }
+};
+
+export const getEmployee = async (id: number): Promise<Employee> => {
+  try {
+    const response = await apiClient.get(`/employees/${id}/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching employee:", error);
+    throw error;
+  }
+};
+
+export const updateEmployee = async (id: number, employeeData: UpdateEmployee): Promise<Employee> => {
+  try {
+    const response = await apiClient.patch(`/employees/${id}/`, employeeData);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating employee:", error);
     throw error;
   }
 };
