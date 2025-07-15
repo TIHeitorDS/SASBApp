@@ -22,7 +22,9 @@ class User(AbstractUser):
     is_staff = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        """Garante que admins sejam staff"""
+        """Garante que admins sejam staff e username seja minúsculo"""
+        if self.username:
+            self.username = self.username.lower()
         if self.role == self.Role.ADMIN:
             self.is_staff = True
         super().save(*args, **kwargs)

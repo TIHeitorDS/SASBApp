@@ -76,12 +76,14 @@ class EmployeeSerializer(UserSerializer):
             raise serializers.ValidationError({"first_name": "Este campo é obrigatório"})
         
         if 'username' in data:
-            username = data['username']
+            username = data['username'].lower()
             instance = getattr(self, 'instance', None)
-            
-            if User.objects.filter(username=username).exclude(pk=instance.pk if instance else None).exists():
+            # Verifica se já existe outro usuário com o mesmo username (case-insensitive)
+            if User.objects.filter(username__iexact=username).exclude(pk=instance.pk if instance else None).exists():
                 raise serializers.ValidationError({"username": "Este nome de usuário já está em uso"})
+            data['username'] = username
         
+        # Validação específica para senha
         is_create = self.instance is None
         if is_create and not data.get('password'):
             raise serializers.ValidationError({"password": "Senha é obrigatória no cadastro"})

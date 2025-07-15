@@ -31,8 +31,11 @@ export default function CadasterWorker() {
   const validateForm = (): { isValid: boolean; errors: Record<string, string> } => {
     const newErrors: Record<string, string> = {};
     
-    if (!formData.username.trim()) {
+    const username = formData.username.trim();
+    if (!username) {
       newErrors.username = "Nome de usuário é obrigatório";
+    } else if (username.includes(' ')) {
+      newErrors.username = "O nome de usuário não pode conter espaços";
     }
     
     if (!formData.first_name.trim()) {
@@ -64,6 +67,7 @@ export default function CadasterWorker() {
     
     // Executa a validação e captura os erros
     const { isValid, errors: validationErrors } = validateForm();
+    const username = formData.username.trim();
     
     // Se há erros, exibe a mensagem e para a execução
     if (!isValid) {
@@ -78,7 +82,7 @@ export default function CadasterWorker() {
     setMessage("");
     
     try {
-      await createEmployee(formData);
+      await createEmployee({ ...formData, username: username.toLowerCase() });
       setMessage("Funcionário cadastrado com sucesso!");
       setFormData({
         username: "",

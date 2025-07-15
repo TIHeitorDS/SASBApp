@@ -64,8 +64,11 @@ export default function EditWorker() {
   const validateForm = (): { isValid: boolean; errors: Record<string, string> } => {
     const newErrors: Record<string, string> = {};
     
-    if (!formData.username?.trim()) {
+    const username = formData.username?.trim() || "";
+    if (!username) {
       newErrors.username = "Nome de usuário é obrigatório";
+    } else if (username.includes(' ')) {
+      newErrors.username = "O nome de usuário não pode conter espaços";
     }
     
     if (!formData.first_name?.trim()) {
@@ -94,6 +97,7 @@ export default function EditWorker() {
     e.preventDefault();
     
     const { isValid, errors: validationErrors } = validateForm();
+    const username = formData.username?.trim() || "";
     
     if (!isValid) {
       const errorMessages = Object.values(validationErrors).filter(msg => msg);
@@ -110,6 +114,9 @@ export default function EditWorker() {
       const updateData: UpdateEmployee = { ...formData };
       if (!updateData.password) {
         delete updateData.password;
+      }
+      if (username) {
+        updateData.username = username.toLowerCase();
       }
       
       await updateEmployee(parseInt(id!), updateData);
@@ -145,7 +152,7 @@ export default function EditWorker() {
   }
 
   return (
-    <Layout title="Editar Funcionário" onSubmit={handleSubmit}>
+    <Layout title="Editar Funcionário" onSubmit={handleSubmit} buttonText="Salvar">
       <Input
         type="text"
         placeholder="Nome de usuário"

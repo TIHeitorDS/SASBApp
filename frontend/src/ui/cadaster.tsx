@@ -6,11 +6,13 @@ export default function Layout({
   children,
   tableColumns = "2",
   onSubmit,
+  buttonText = "Cadastrar",
 }: {
   title: string;
   children: React.ReactNode;
   tableColumns?: string;
   onSubmit?: React.FormEventHandler<HTMLFormElement>;
+  buttonText?: string;
 }) {
   return (
     <div className="flex flex-col justify-center items-center gap-[27px]">
@@ -30,7 +32,7 @@ export default function Layout({
       >
         {children}
         <div className="w-full lg:w-50 mr-auto col-span-full">
-          <SubmitButton text="Cadastrar" theme="black" type="submit" />
+          <SubmitButton text={buttonText} theme="black" type="submit" />
         </div>
       </form>
     </div>
