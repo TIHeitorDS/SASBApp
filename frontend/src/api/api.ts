@@ -88,4 +88,14 @@ export const createEmployee = async (employeeData: CreateEmployee) => {
   }
 };
 
+export const getMe = async (): Promise<Employee> => {
+  try {
+    const response = await apiClient.get('/me/');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching current user:", error);
+    throw error;
+  }
+};
+
 export default apiClient;
