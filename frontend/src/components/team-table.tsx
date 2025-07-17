@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import EditButton from "./edit-button";
 import RemoveButton from "./remove-button";
-import { getEmployees } from "../api/api";
+import { getEmployees, deleteEmployee } from "../api/api";
 import type { Employee } from "../api/api";
 
 export default function TeamTable() {
@@ -25,6 +25,16 @@ export default function TeamTable() {
 
     fetchEmployees();
   }, []);
+
+  const handleRemove = async (id: number) => {
+    if (!window.confirm("Tem certeza que deseja remover este funcionário?")) return;
+    try {
+      await deleteEmployee(id);
+      setEmployees((prev) => prev.filter((emp) => emp.id !== id));
+    } catch (err) {
+      alert("Erro ao remover funcionário.");
+    }
+  };
 
   if (loading) {
     return (
@@ -88,7 +98,7 @@ export default function TeamTable() {
 
               <div className="text-center flex items-center gap-5 ml-2.5">
                 <EditButton path={`/editar-funcionario/${employee.id}`} />
-                <RemoveButton />
+                <RemoveButton onClick={() => handleRemove(employee.id)} />
               </div>
             </div>
           ))

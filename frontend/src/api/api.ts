@@ -88,6 +88,15 @@ export const createEmployee = async (employeeData: CreateEmployee) => {
   }
 };
 
+export const deleteEmployee = async (id: number): Promise<void> => {
+  try {
+    await apiClient.delete(`/employees/${id}/`);
+  } catch (error) {
+    console.error("Error deleting employee:", error);
+    throw error;
+  }
+};
+
 export const getMe = async (): Promise<Employee> => {
   try {
     const response = await apiClient.get('/me/');
