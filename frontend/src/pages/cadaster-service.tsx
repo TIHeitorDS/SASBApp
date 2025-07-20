@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import Input from "../components/input";
 import Layout from "../ui/cadaster";
 import apiClient from "../api/api";
@@ -17,13 +18,19 @@ export default function CadasterService() {
     setError(null);
     setSuccess(null);
 
-    const durationInt = parseInt(duration, 10);
-    const priceFloat = parseFloat(price.replace(",", "."));
+    const durationRegex = /^\d+$/;
+    const priceRegex = /^\d+([.,]\d{1,2})?$/;
 
-    if (!name || isNaN(durationInt) || isNaN(priceFloat)) {
-      setError("Por favor, preencha todos os campos com valores válidos.");
+    if (!name || !duration.match(durationRegex) || !price.match(priceRegex)) {
+      setError(
+        "Por favor, preencha os campos com valores válidos. Duração deve conter apenas números (minutos), e o preço um valor monetário."
+      );
       return;
     }
+
+    // Conversão de dados
+    const durationInt = parseInt(duration, 10);
+    const priceFloat = parseFloat(price.replace(",", "."));
 
     try {
       await apiClient.post("/services/", {
@@ -36,19 +43,28 @@ export default function CadasterService() {
       setTimeout(() => {
         navigate("/servicos");
       }, 1500);
+    } catch (err: unknown) {
+      let errorMessage = "Ocorreu um erro desconhecido ao cadastrar o serviço.";
 
-    } catch (err: unknown) { 
-      if (err instanceof Error) {
-        setError(`Erro ao cadastrar o serviço: ${err.message}`);
-      } else {
-        setError("Ocorreu um erro desconhecido ao cadastrar o serviço.");
+      if (axios.isAxiosError(err) && err.response && err.response.data) {
+        const errorData = err.response.data;
+        const firstErrorField = Object.keys(errorData)[0];
+        errorMessage = errorData[firstErrorField][0];
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
       }
+
+      setError(`Erro: ${errorMessage}`);
       console.error(err);
     }
   };
 
   return (
-    <Layout title="Cadastrar Novo Serviço" tableColumns="3" onSubmit={handleSubmit}>
+    <Layout
+      title="Cadastrar Novo Serviço"
+      tableColumns="3"
+      onSubmit={handleSubmit}
+    >
       <Input
         type="text"
         placeholder="Nome do Serviço"
@@ -70,11 +86,13 @@ export default function CadasterService() {
         value={price}
         onChange={(e) => setPrice(e.target.value)}
       />
-      
+
       {/* Mensagens de feedback */}
       <div className="lg:col-span-3">
         {error && <p className="text-red-500 text-center mb-2">{error}</p>}
-        {success && <p className="text-green-500 text-center mb-2">{success}</p>}
+        {success && (
+          <p className="text-green-500 text-center mb-2">{success}</p>
+        )}
       </div>
     </Layout>
   );
