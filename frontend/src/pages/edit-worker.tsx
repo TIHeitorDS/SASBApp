@@ -1,11 +1,14 @@
-import { useState } from "react";
-import { createEmployee } from "../api/api";
-import type { CreateEmployee } from "../api/api";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { getEmployee, updateEmployee } from "../api/api";
+import type { UpdateEmployee } from "../api/api";
 import Input from "../components/input";
 import Layout from "../ui/cadaster";
 
-export default function CadasterWorker() {
-  const [formData, setFormData] = useState<CreateEmployee>({
+export default function EditWorker() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState<UpdateEmployee>({
     username: "",
     first_name: "",
     last_name: "",
@@ -16,6 +19,36 @@ export default function CadasterWorker() {
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEmployee = async () => {
+      if (!id) {
+        setMessage("ID do funcionário não fornecido");
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const employee = await getEmployee(parseInt(id));
+        setFormData({
+          username: employee.username,
+          first_name: employee.first_name,
+          last_name: employee.last_name,
+          email: employee.email,
+          password: "",
+          phone: employee.phone || "",
+        });
+      } catch (error) {
+        setMessage("Erro ao carregar dados do funcionário");
+        console.error("Error fetching employee:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEmployee();
+  }, [id]);
 
   const handleChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -31,30 +64,28 @@ export default function CadasterWorker() {
   const validateForm = (): { isValid: boolean; errors: Record<string, string> } => {
     const newErrors: Record<string, string> = {};
     
-    const username = formData.username.trim();
+    const username = formData.username?.trim() || "";
     if (!username) {
       newErrors.username = "Nome de usuário é obrigatório";
     } else if (username.includes(' ')) {
       newErrors.username = "O nome de usuário não pode conter espaços";
     }
     
-    if (!formData.first_name.trim()) {
+    if (!formData.first_name?.trim()) {
       newErrors.first_name = "Nome é obrigatório";
     }
     
-    if (!formData.last_name.trim()) {
+    if (!formData.last_name?.trim()) {
       newErrors.last_name = "Sobrenome é obrigatório";
     }
     
-    if (!formData.email.trim()) {
+    if (!formData.email?.trim()) {
       newErrors.email = "Email é obrigatório";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Email inválido";
     }
     
-    if (!formData.password) {
-      newErrors.password = "Senha é obrigatória";
-    } else if (formData.password.length < 6) {
+    if (formData.password && formData.password.length < 6) {
       newErrors.password = "Senha deve ter pelo menos 6 caracteres";
     }
     
@@ -65,11 +96,9 @@ export default function CadasterWorker() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
-    // Executa a validação e captura os erros
     const { isValid, errors: validationErrors } = validateForm();
-    const username = formData.username.trim();
+    const username = formData.username?.trim() || "";
     
-    // Se há erros, exibe a mensagem e para a execução
     if (!isValid) {
       const errorMessages = Object.values(validationErrors).filter(msg => msg);
       if (errorMessages.length > 0) {
@@ -82,49 +111,62 @@ export default function CadasterWorker() {
     setMessage("");
     
     try {
-      await createEmployee({ ...formData, username: username.toLowerCase() });
-      setMessage("Funcionário cadastrado com sucesso!");
-      setFormData({
-        username: "",
-        first_name: "",
-        last_name: "",
-        email: "",
-        password: "",
-        phone: "",
-      });
-      setErrors({});
-    } catch (error) {
-      setMessage("Erro ao cadastrar funcionário. Verifique os dados e tente novamente.");
+      const updateData: UpdateEmployee = { ...formData };
+      if (!updateData.password) {
+        delete updateData.password;
+      }
+      if (username) {
+        updateData.username = username.toLowerCase();
+      }
+      
+      await updateEmployee(parseInt(id!), updateData);
+      setMessage("Funcionário atualizado com sucesso!");
+      
+      setTimeout(() => {
+        navigate("/equipe");
+      }, 2000);
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        const data = error.response.data;
+        let backendMsg = "";
+        if (typeof data === "string") {
+          backendMsg = data;
+        } else if (typeof data === "object") {
+          backendMsg = Object.values(data).flat().join(" ");
+        }
+        setMessage(backendMsg || "Erro ao atualizar funcionário. Verifique os dados e tente novamente.");
+      } else {
+        setMessage("Erro ao atualizar funcionário. Verifique os dados e tente novamente.");
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>Carregando dados do funcionário...</p>
+      </div>
+    );
+  }
+
   return (
-    <Layout title="Cadastrar Funcionário" onSubmit={handleSubmit}>
+    <Layout title="Editar Funcionário" onSubmit={handleSubmit} buttonText="Salvar">
       <Input
         type="text"
         placeholder="Nome de usuário"
         theme="black"
-        value={formData.username}
+        value={formData.username || ""}
         onChange={handleChange("username")}
         error={!!errors.username}
-      />
-      
-      <Input
-        type="password"
-        placeholder="Senha"
-        theme="black"
-        value={formData.password}
-        onChange={handleChange("password")}
-        error={!!errors.password}
       />
       
       <Input
         type="text"
         placeholder="Nome"
         theme="black"
-        value={formData.first_name}
+        value={formData.first_name || ""}
         onChange={handleChange("first_name")}
         error={!!errors.first_name}
       />
@@ -133,7 +175,7 @@ export default function CadasterWorker() {
         type="text"
         placeholder="Sobrenome"
         theme="black"
-        value={formData.last_name}
+        value={formData.last_name || ""}
         onChange={handleChange("last_name")}
         error={!!errors.last_name}
       />
@@ -142,9 +184,18 @@ export default function CadasterWorker() {
         type="email"
         placeholder="Email"
         theme="black"
-        value={formData.email}
+        value={formData.email || ""}
         onChange={handleChange("email")}
         error={!!errors.email}
+      />
+      
+      <Input
+        type="password"
+        placeholder="Nova senha (opcional)"
+        theme="black"
+        value={formData.password || ""}
+        onChange={handleChange("password")}
+        error={!!errors.password}
       />
       
       <Input
@@ -176,9 +227,9 @@ export default function CadasterWorker() {
       
       {isSubmitting && (
         <div className="text-center text-blue-600">
-          Cadastrando funcionário...
+          Atualizando funcionário...
         </div>
       )}
     </Layout>
   );
-}
+} 

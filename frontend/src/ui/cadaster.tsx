@@ -5,10 +5,14 @@ export default function Layout({
   title,
   children,
   tableColumns = "2",
+  onSubmit,
+  buttonText = "Cadastrar",
 }: {
   title: string;
   children: React.ReactNode;
   tableColumns?: string;
+  onSubmit?: React.FormEventHandler<HTMLFormElement>;
+  buttonText?: string;
 }) {
   return (
     <div className="flex flex-col justify-center items-center gap-[27px]">
@@ -18,6 +22,7 @@ export default function Layout({
 
       <form
         action=""
+        onSubmit={onSubmit}
         className={clsx(
           "grid w-full gap-[27px]",
           tableColumns === "2" && "lg:grid-cols-2",
@@ -26,11 +31,10 @@ export default function Layout({
         )}
       >
         {children}
+        <div className="w-full lg:w-50 mr-auto col-span-full">
+          <SubmitButton text={buttonText} theme="black" type="submit" />
+        </div>
       </form>
-
-      <div className="w-full lg:w-50 mr-auto">
-        <SubmitButton text="Cadastrar" theme="black" />
-      </div>
     </div>
   );
 }
