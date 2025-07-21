@@ -3,7 +3,8 @@ from django.http import Http404
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import DatabaseError, IntegrityError
 from rest_framework import viewsets, permissions, status, filters
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.utils import timezone
 from .models import Service, Appointment, User
@@ -262,3 +263,10 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                 {'status': 'error', 'message': 'Erro ao concluir agendamento'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def me(request):
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data)

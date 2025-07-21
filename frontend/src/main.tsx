@@ -13,6 +13,7 @@ import Team from "./pages/team.tsx";
 import CadasterAppointment from "./pages/cadaster-appointment.tsx";
 import CadasterService from "./pages/cadaster-service.tsx";
 import CadasterWorker from "./pages/cadaster-worker.tsx";
+import EditWorker from "./pages/edit-worker.tsx";
 import PageNotFound from "./pages/page-not-found.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx"; 
 
@@ -39,6 +40,7 @@ createRoot(document.getElementById("root")!).render(
           />
           <Route path="cadastrar-servico" element={<CadasterService />} />
           <Route path="cadastrar-funcionario" element={<CadasterWorker />} />
+          <Route path="editar-funcionario/:id" element={<EditWorker />} />
         </Route>
 
         <Route path="*" element={<PageNotFound />} />

@@ -57,6 +57,17 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+    def update(self, instance, validated_data):
+        if 'password' in validated_data:
+            password = validated_data.pop('password')
+            instance.set_password(password)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        
+        instance.save()
+        return instance
+
 
 class EmployeeSerializer(UserSerializer):
     first_name = serializers.CharField(required=True)  # Força a validação
@@ -64,15 +75,36 @@ class EmployeeSerializer(UserSerializer):
     def validate(self, data):
         if not data.get('first_name'):
             raise serializers.ValidationError({"first_name": "Este campo é obrigatório"})
+        
+        if 'username' in data:
+            username = data['username'].lower()
+            instance = getattr(self, 'instance', None)
+            # Verifica se já existe outro usuário com o mesmo username (case-insensitive)
+            if User.objects.filter(username__iexact=username).exclude(pk=instance.pk if instance else None).exists():
+                raise serializers.ValidationError({"username": "Este nome de usuário já está em uso"})
+            data['username'] = username
+        
+        # Validação específica para senha
+        is_create = self.instance is None
+        if is_create and not data.get('password'):
+            raise serializers.ValidationError({"password": "Senha é obrigatória no cadastro"})
+        
+        if 'password' in data and len(data['password']) < 6:
+            raise serializers.ValidationError({"password": "A senha deve ter pelo menos 6 caracteres"})
+        
         return data
 
     class Meta(UserSerializer.Meta):
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'phone', 'password']
         extra_kwargs = {
             **UserSerializer.Meta.extra_kwargs,
+            'username': {
+                'required': True,
+                'validators': [UniqueValidator(queryset=User.objects.all())]
+            },
             'password': {
                 'write_only': True,
-                'required': True,
+                'required': False,
                 'min_length': 6,
                 'error_messages': {
                     'min_length': 'A senha deve ter pelo menos 6 caracteres.'
@@ -83,6 +115,17 @@ class EmployeeSerializer(UserSerializer):
     def create(self, validated_data):
         validated_data['role'] = User.Role.EMPLOYEE
         return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        if 'password' in validated_data:
+            password = validated_data.pop('password')
+            instance.set_password(password)
+        
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        
+        instance.save()
+        return instance
 
 
 class ServiceSerializer(serializers.ModelSerializer):
