@@ -6,6 +6,7 @@ from django.utils import timezone
 from .models import User, Service, Appointment
 from datetime import timedelta  
 from django.core.exceptions import ValidationError
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -194,3 +195,12 @@ class AppointmentSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['status'] = Appointment.Status.RESERVED
         return super().create(validated_data)
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['username'] = user.username
+        token['role'] = user.role
+
+        return token

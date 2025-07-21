@@ -11,7 +11,7 @@ export default function Layout({
   title: string;
   children: React.ReactNode;
   tableColumns?: string;
-  onSubmit?: React.FormEventHandler<HTMLFormElement>;
+  onSubmit: (e: React.FormEvent) => void;
   buttonText?: string;
 }) {
   return (
@@ -21,18 +21,17 @@ export default function Layout({
       </p>
 
       <form
-        action=""
         onSubmit={onSubmit}
         className={clsx(
           "grid w-full gap-[27px]",
           tableColumns === "2" && "lg:grid-cols-2",
           tableColumns === "3" && "lg:grid-cols-3",
-          tableColumns === "4" && "lg:grid-cols-4",
+          tableColumns === "4" && "lg:grid-cols-4"
         )}
       >
         {children}
-        <div className="w-full lg:w-50 mr-auto col-span-full">
-          <SubmitButton text={buttonText} theme="black" type="submit" />
+        <div className="w-full lg:w-50 mr-auto">
+          <SubmitButton text="Cadastrar" theme="black" type="submit" />
         </div>
       </form>
     </div>
