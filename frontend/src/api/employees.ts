@@ -7,6 +7,7 @@ export interface CreateEmployee {
   email: string;
   password: string;
   phone?: string;
+  role: string;
 }
 
 export interface UpdateEmployee {
@@ -16,6 +17,7 @@ export interface UpdateEmployee {
   password?: string;
   username?: string;
   phone?: string;
+  role?: string;
 }
 
 export interface Employee {
@@ -39,9 +41,23 @@ export const getEmployees = async (): Promise<Employee[]> => {
   }
 };
 
+export const getUsersByRole = async (roles: string[]): Promise<Employee[]> => {
+  try {
+    const response = await apiClient.get('/users/', {
+      params: {
+        role: roles.join(',')
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao buscar usuários por papel:", error);
+    throw error;
+  }
+};
+
 export const getEmployee = async (id: number): Promise<Employee> => {
   try {
-    const response = await apiClient.get(`/employees/${id}/`);
+    const response = await apiClient.get(`/users/${id}/`);
     return response.data;
   } catch (error) {
     console.error("Erro ao buscar funcionário:", error);
@@ -51,7 +67,7 @@ export const getEmployee = async (id: number): Promise<Employee> => {
 
 export const updateEmployee = async (id: number, employeeData: UpdateEmployee): Promise<Employee> => {
   try {
-    const response = await apiClient.patch(`/employees/${id}/`, employeeData);
+    const response = await apiClient.patch(`/users/${id}/`, employeeData);
     return response.data;
   } catch (error) {
     console.error("Erro ao atualizar funcionário:", error);
@@ -59,21 +75,29 @@ export const updateEmployee = async (id: number, employeeData: UpdateEmployee): 
   }
 };
 
-export const createEmployee = async (employeeData: CreateEmployee) => {
+export const deleteEmployee = async (id: number): Promise<void> => {
   try {
-    const response = await apiClient.post('/employees/', employeeData);
-    return response.data;
+    await apiClient.delete(`/users/${id}/`);
   } catch (error) {
-    console.error("Erro ao criar funcionário:", error);
+    console.error("Erro ao deletar funcionário:", error);
     throw error;
   }
 };
 
-export const deleteEmployee = async (id: number): Promise<void> => {
+export const createUser = async (userData: CreateEmployee) => {
   try {
-    await apiClient.delete(`/employees/${id}/`);
+    let endpoint = '';
+    if (userData.role === 'EMPLOYEE') {
+      endpoint = '/employees/';
+    } else if (userData.role === 'PROFESSIONAL') {
+      endpoint = '/professionals/';
+    } else {
+      endpoint = '/users/'; 
+    }
+    const response = await apiClient.post(endpoint, userData);
+    return response.data;
   } catch (error) {
-    console.error("Erro ao deletar funcionário:", error);
+    console.error("Erro ao criar usuário:", error);
     throw error;
   }
 };

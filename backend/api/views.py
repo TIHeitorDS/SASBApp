@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.utils import timezone
 from .models import Service, Appointment, User
-from .serializers import ServiceSerializer, EmployeeSerializer, AppointmentSerializer, UserSerializer
+from .serializers import ServiceSerializer, EmployeeSerializer, ProfessionalSerializer, AppointmentSerializer, UserSerializer
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -19,9 +19,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = User.objects.all().order_by('first_name')
-        role = self.request.query_params.get('role')
-        if role and role.upper() in User.Role.values:
-            queryset = queryset.filter(role=role.upper())
+        roles_param = self.request.query_params.get('role')
+        if roles_param:
+            roles_list = [r.strip().upper() for r in roles_param.split(',') if r.strip().upper() in User.Role.values]
+            if roles_list:
+                queryset = queryset.filter(role__in=roles_list)
         return queryset
 
     def perform_create(self, serializer):
@@ -56,14 +58,28 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         employee = self.get_object()
 
+
+class ProfessionalViewSet(viewsets.ModelViewSet):
+    serializer_class = ProfessionalSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+    def get_queryset(self):
+        return User.objects.filter(role=User.Role.PROFESSIONAL).order_by('first_name')
+
+    def perform_create(self, serializer):
+        serializer.save(role=User.Role.PROFESSIONAL, is_staff=False)
+
+    def destroy(self, request, *args, **kwargs):
+        professional = self.get_object()
+
         if Appointment.objects.filter(
-            employee=employee,
+            employee=professional,
             start_time__gt=timezone.now(),
             status=Appointment.Status.RESERVED
         ).exists():
             return Response(
-                {"error": "employee_has_future_appointments",
-                 "message": "Não é possível remover funcionário com agendamentos futuros"},
+                {"error": "professional_has_future_appointments",
+                 "message": "Não é possível remover profissional com agendamentos futuros"},
                 status=status.HTTP_400_BAD_REQUEST
             )
 

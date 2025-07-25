@@ -12,9 +12,10 @@ class User(AbstractUser):
     class Role(models.TextChoices):
         ADMIN = 'ADMIN', 'Administrador'
         EMPLOYEE = 'EMPLOYEE', 'Funcionário'
+        PROFESSIONAL = 'PROFESSIONAL', 'Profissional'
 
     role = models.CharField(
-        max_length=8,
+        max_length=12,
         choices=Role.choices,
         default=Role.EMPLOYEE
     )
@@ -67,6 +68,22 @@ class Employee(User):
     @classmethod
     def get_queryset(cls):
         return super().get_queryset().filter(role=User.Role.EMPLOYEE)
+
+
+class Professional(User):
+    class Meta:
+        proxy = True
+        verbose_name = 'Profissional'
+        verbose_name_plural = 'Profissionais'
+
+    def save(self, *args, **kwargs):
+        self.role = User.Role.PROFESSIONAL
+        self.is_staff = False
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def get_queryset(cls):
+        return super().get_queryset().filter(role=User.Role.PROFESSIONAL)
 
 
 class Service(models.Model):

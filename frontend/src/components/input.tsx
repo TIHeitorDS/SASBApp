@@ -6,7 +6,7 @@ export default function Input({
   onChange,
   error = false,
 }: {
-  type: "email" | "password" | "text";
+  type: "email" | "password" | "text" | "datetime-local";
   placeholder: string;
   theme?: "white" | "black";
   value: string;

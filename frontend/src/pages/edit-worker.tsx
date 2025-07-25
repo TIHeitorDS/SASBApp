@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getEmployee, updateEmployee } from "../api";
-import type { UpdateEmployee } from "../api";
+import { getEmployee, updateEmployee } from "../api/employees";
+import type { UpdateEmployee, Employee } from "../api/employees";
 import Input from "../components/input";
 import Layout from "../ui/cadaster";
 
@@ -15,6 +15,7 @@ export default function EditWorker() {
     email: "",
     password: "",
     phone: "",
+    role: "",
   });
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -30,7 +31,7 @@ export default function EditWorker() {
       }
 
       try {
-        const employee = await getEmployee(parseInt(id));
+        const employee: Employee = await getEmployee(parseInt(id));
         setFormData({
           username: employee.username,
           first_name: employee.first_name,
@@ -38,6 +39,7 @@ export default function EditWorker() {
           email: employee.email,
           password: "",
           phone: employee.phone || "",
+          role: employee.role,
         });
       } catch (error) {
         setMessage("Erro ao carregar dados do funcionário");
@@ -50,7 +52,7 @@ export default function EditWorker() {
     fetchEmployee();
   }, [id]);
 
-  const handleChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (field: keyof UpdateEmployee) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const value = e.target.value;
     setFormData((prev) => ({ 
       ...prev, 
@@ -93,7 +95,8 @@ export default function EditWorker() {
     return { isValid: Object.keys(newErrors).length === 0, errors: newErrors };
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
+  const handleSubmit = (e: React.FormEvent<Element>) => {
     e.preventDefault();
     
     const { isValid, errors: validationErrors } = validateForm();
@@ -110,37 +113,38 @@ export default function EditWorker() {
     setIsSubmitting(true);
     setMessage("");
     
-    try {
-      const updateData: UpdateEmployee = { ...formData };
-      if (!updateData.password) {
-        delete updateData.password;
-      }
-      if (username) {
-        updateData.username = username.toLowerCase();
-      }
-      
-      await updateEmployee(parseInt(id!), updateData);
-      setMessage("Funcionário atualizado com sucesso!");
-      
-      setTimeout(() => {
-        navigate("/equipe");
-      }, 2000);
-    } catch (error: any) {
-      if (error.response && error.response.data) {
-        const data = error.response.data;
-        let backendMsg = "";
-        if (typeof data === "string") {
-          backendMsg = data;
-        } else if (typeof data === "object") {
-          backendMsg = Object.values(data).flat().join(" ");
-        }
-        setMessage(backendMsg || "Erro ao atualizar funcionário. Verifique os dados e tente novamente.");
-      } else {
-        setMessage("Erro ao atualizar funcionário. Verifique os dados e tente novamente.");
-      }
-    } finally {
-      setIsSubmitting(false);
+    const updateData: UpdateEmployee = { ...formData };
+    if (!updateData.password) {
+      delete updateData.password;
     }
+    if (username) {
+      updateData.username = username.toLowerCase();
+    }
+
+    updateEmployee(parseInt(id!), updateData)
+      .then(() => {
+        setMessage("Funcionário atualizado com sucesso!");
+        setTimeout(() => {
+          navigate("/equipe");
+        }, 2000);
+      })
+      .catch((error: any) => {
+        if (error.response && error.response.data) {
+          const data = error.response.data;
+          let backendMsg = "";
+          if (typeof data === "string") {
+            backendMsg = data;
+          } else if (typeof data === "object") {
+            backendMsg = Object.values(data).flat().join(" ");
+          }
+          setMessage(backendMsg || "Erro ao atualizar funcionário. Verifique os dados e tente novamente.");
+        } else {
+          setMessage("Erro ao atualizar funcionário. Verifique os dados e tente novamente.");
+        }
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   if (isLoading) {
@@ -152,7 +156,7 @@ export default function EditWorker() {
   }
 
   return (
-    <Layout title="Editar Funcionário" onSubmit={handleSubmit} buttonText="Salvar">
+    <Layout title="Editar Usuário" onSubmit={handleSubmit} buttonText="Salvar"> {}
       <Input
         type="text"
         placeholder="Nome de usuário"
@@ -205,6 +209,22 @@ export default function EditWorker() {
         value={formData.phone || ""}
         onChange={handleChange("phone")}
       />
+      
+      <div className="mb-4">
+        <label htmlFor="role-select" className="block text-gray-700 text-sm font-bold mb-2">
+          Tipo de Usuário:
+        </label>
+        <select
+          id="role-select"
+          name="role"
+          value={formData.role || ""}
+          onChange={handleChange("role")}
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        >
+          <option value="EMPLOYEE">Funcionário</option>
+          <option value="PROFESSIONAL">Profissional</option>
+        </select>
+      </div>
       
       {message && (
         <div className={`p-3 rounded-md text-center ${

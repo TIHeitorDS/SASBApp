@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createEmployee, type CreateEmployee } from "../api/employees";
+import { createUser, type CreateEmployee } from "../api/employees";
 import Input from "../components/input";
 import Layout from "../ui/cadaster";
 
@@ -11,12 +11,13 @@ export default function CadasterWorker() {
     email: "",
     password: "",
     phone: "",
+    role: "EMPLOYEE",
   });
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (field: keyof CreateEmployee) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const value = e.target.value;
     setFormData((prev) => ({ 
       ...prev, 
@@ -61,7 +62,7 @@ export default function CadasterWorker() {
     return { isValid: Object.keys(newErrors).length === 0, errors: newErrors };
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<Element>) => {
     e.preventDefault();
     
     // Executa a validação e captura os erros
@@ -80,27 +81,30 @@ export default function CadasterWorker() {
     setIsSubmitting(true);
     setMessage("");
     
-    try {
-      await createEmployee({ ...formData, username: username.toLowerCase() });
-      setMessage("Funcionário cadastrado com sucesso!");
-      setFormData({
-        username: "",
-        first_name: "",
-        last_name: "",
-        email: "",
-        password: "",
-        phone: "",
+    createUser({ ...formData, username: username.toLowerCase(), role: formData.role })
+      .then(() => {
+        setMessage("Funcionário cadastrado com sucesso!");
+        setFormData({
+          username: "",
+          first_name: "",
+          last_name: "",
+          email: "",
+          password: "",
+          phone: "",
+          role: "EMPLOYEE",
+        });
+        setErrors({});
+      })
+      .catch(() => {
+        setMessage("Erro ao cadastrar funcionário. Verifique os dados e tente novamente.");
+      })
+      .finally(() => {
+        setIsSubmitting(false);
       });
-      setErrors({});
-    } catch (error) {
-      setMessage("Erro ao cadastrar funcionário. Verifique os dados e tente novamente.");
-    } finally {
-      setIsSubmitting(false);
-    }
   };
 
   return (
-    <Layout title="Cadastrar Funcionário" onSubmit={handleSubmit}>
+    <Layout title="Cadastrar Usuário" onSubmit={handleSubmit}> {}
       <Input
         type="text"
         placeholder="Nome de usuário"
@@ -153,6 +157,22 @@ export default function CadasterWorker() {
         value={formData.phone || ""}
         onChange={handleChange("phone")}
       />
+      
+      <div className="mb-4">
+        <label htmlFor="role-select" className="block text-gray-700 text-sm font-bold mb-2">
+          Tipo de Usuário:
+        </label>
+        <select
+          id="role-select"
+          name="role"
+          value={formData.role}
+          onChange={handleChange("role")}
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        >
+          <option value="EMPLOYEE">Funcionário</option>
+          <option value="PROFESSIONAL">Profissional</option>
+        </select>
+      </div>
       
       {message && (
         <div className={`p-3 rounded-md text-center ${
