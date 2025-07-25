@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { createEmployee } from "../api/api";
-import type { CreateEmployee } from "../api/api";
+import { createEmployee, type CreateEmployee } from "../api/employees";
 import Input from "../components/input";
 import Layout from "../ui/cadaster";
 

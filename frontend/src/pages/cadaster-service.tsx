@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Input from "../components/input";
 import Layout from "../ui/cadaster";
-import apiClient from "../api/api";
+import apiClient from "../api/client";
 
 export default function CadasterService() {
   const [name, setName] = useState("");

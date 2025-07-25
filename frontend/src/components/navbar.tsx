@@ -5,7 +5,7 @@ import arrowDown from "../assets/arrow-down.svg";
 import { useState, useEffect, createContext, useContext } from "react";
 import menuIcon from "../assets/open-menu.svg";
 import closeIcon from "../assets/close-menu.svg";
-import { getMe } from "../api/api";
+import { getMe } from "../api/auth";
 
 interface AuthUser {
   username: string;

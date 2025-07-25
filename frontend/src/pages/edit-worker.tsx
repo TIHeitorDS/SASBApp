@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getEmployee, updateEmployee } from "../api/api";
-import type { UpdateEmployee } from "../api/api";
+import { getEmployee, updateEmployee } from "../api";
+import type { UpdateEmployee } from "../api";
 import Input from "../components/input";
 import Layout from "../ui/cadaster";
 
@@ -232,4 +232,4 @@ export default function EditWorker() {
       )}
     </Layout>
   );
-} 
+}

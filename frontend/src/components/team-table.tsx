@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import EditButton from "./edit-button";
 import RemoveButton from "./remove-button";
-import { getEmployees, deleteEmployee } from "../api/api";
-import type { Employee } from "../api/api";
+import { getEmployees, deleteEmployee, type Employee } from "../api/employees";
 
 export default function TeamTable() {
   const [employees, setEmployees] = useState<Employee[]>([]);

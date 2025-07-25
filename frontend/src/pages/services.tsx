@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import NavButton from "../components/nav-button";
 import ServicesTable from "../components/services-table";
-import apiClient from "../api/api";
+import apiClient from "../api/client";
 
 interface Service {
   id: number;
