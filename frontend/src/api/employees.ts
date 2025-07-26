@@ -41,6 +41,16 @@ export const getEmployees = async (): Promise<Employee[]> => {
   }
 };
 
+export const getProfessionals = async (): Promise<Employee[]> => {
+  try {
+    const response = await apiClient.get('/professionals/');
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao buscar profissionais:", error);
+    throw error;
+  }
+};
+
 export const getUsersByRole = async (roles: string[]): Promise<Employee[]> => {
   try {
     const response = await apiClient.get('/users/', {

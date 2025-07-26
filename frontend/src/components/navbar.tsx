@@ -1,40 +1,18 @@
-import { Link, NavLink } from "react-router";
+import { Link, NavLink } from "react-router-dom";
 import icon from "../assets/SASBApp-logo.svg";
-import userProfile from "../assets/user-profile.png";
 import arrowDown from "../assets/arrow-down.svg";
-import { useState, useEffect, createContext, useContext } from "react";
+import { useState } from "react";
 import menuIcon from "../assets/open-menu.svg";
 import closeIcon from "../assets/close-menu.svg";
-import { getMe } from "../api/auth";
-
-interface AuthUser {
-  username: string;
-  role: string;
-}
-
-const AuthContext = createContext<AuthUser | null>(null);
-
-export function useAuth() {
-  return useContext(AuthContext);
-}
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showExitButton, setShowExitButton] = useState(false);
-  const [user, setUser] = useState<AuthUser | null>(null);
+  const { user, isLoading } = useAuth();
 
-  useEffect(() => {
-    getMe().then((data) => {
-      setUser({
-        username: data.username,
-        role: data.role === "ADMIN" ? "Administrador" : "funcionário"
-      });
-    }).catch(() => {
-      setUser(null);
-    });
-  }, []);
-
-  const isAdmin = user?.role === "Administrador";
+  const isAdmin = user?.role === "ADMIN";
+  const userRole = user?.role === "ADMIN" ? "Administrador" : "Funcionário";
 
   return (
     <nav className="flex justify-between items-center px-6 md:px-[100px] h-[80px] md:h-[123px] relative">
@@ -87,7 +65,7 @@ export default function Navbar() {
 
       <div className="hidden md:flex items-center gap-4 relative h-full">
         <p className="font-semibold">
-          {user ? `Logado como ${user.username} (${user.role})` : "Autenticando..."}
+          {isLoading ? "Carregando..." : user ? `Logado como ${user.username} (${userRole})` : "Não autenticado"}
         </p>
 
         <button
@@ -165,7 +143,7 @@ export default function Navbar() {
           )}
           <div className="w-full flex items-center gap-2 mt-4">
             <p className="font-semibold">
-              {user ? `Logado como ${user.username} (${user.role})` : "Autenticando..."}
+              {isLoading ? "Carregando..." : user ? `Logado como ${user.username} (${userRole})` : "Não autenticado"}
             </p>
 
             <div className="ml-auto">

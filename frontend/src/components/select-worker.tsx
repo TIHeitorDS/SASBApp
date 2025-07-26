@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getEmployees, type Employee } from "../api/employees";
+import { getProfessionals, type Employee } from "../api/employees";
 
 interface SelectWorkerProps {
   onWorkerSelect: (workerId: number) => void;
@@ -14,13 +14,10 @@ export default function SelectWorker({ onWorkerSelect, selectedWorkerId }: Selec
   useEffect(() => {
     const fetchWorkers = async () => {
       try {
-        const data = await getEmployees();
-        const filteredWorkers = data.filter(
-          (worker) => worker.role === "EMPLOYEE" || worker.role === "PROFESSIONAL"
-        );
-        setWorkers(filteredWorkers);
+        const data = await getProfessionals();
+        setWorkers(data);
       } catch (err) {
-        setError("Erro ao carregar funcionários/profissionais.");
+        setError("Erro ao carregar profissionais.");
         console.error(err);
       } finally {
         setLoading(false);
@@ -36,7 +33,7 @@ export default function SelectWorker({ onWorkerSelect, selectedWorkerId }: Selec
   };
 
   if (loading) {
-    return <p className="text-gray-500">Carregando funcionários/profissionais...</p>;
+    return <p className="text-gray-500">Carregando profissionais...</p>;
   }
 
   if (error) {
@@ -50,7 +47,7 @@ export default function SelectWorker({ onWorkerSelect, selectedWorkerId }: Selec
       value={selectedWorkerId || ""}
     >
       <option value="" disabled>
-        Selecionar Funcionário/Profissional
+        Selecionar Profissional
       </option>
       {workers.map((worker) => (
         <option key={worker.id} value={worker.id} className="text-[#767575]">

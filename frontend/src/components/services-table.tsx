@@ -1,3 +1,8 @@
+import { useAuth } from "../contexts/AuthContext";
+import { Link } from "react-router-dom";
+import editIcon from "/edit.svg";
+import deleteIcon from "/bin.svg";
+
 interface Service {
   id: number;
   name: string;
@@ -16,12 +21,16 @@ const formatDuration = (minutes: number) => {
 };
 
 export default function ServicesTable({ services }: { services: Service[] }) {
+  const { user } = useAuth();
+  const isAdmin = user?.role === "ADMIN";
+
   return (
     <div className="w-full font-syne">
-      <div className="grid grid-cols-2 lg:grid-cols-3 bg-gray-secondary/3 border-[0.5px] border-gray py-3">
+      <div className={`grid ${isAdmin ? 'grid-cols-4' : 'grid-cols-3'} bg-gray-secondary/3 border-[0.5px] border-gray py-3`}>
         <div className="text-center lg:text-start text-sm lg:text-base lg:pl-12 font-semibold">Serviço</div>
         <div className="text-center font-semibold text-sm lg:text-base">Duração</div>
         <div className="text-center font-semibold text-sm lg:text-base ">Preço</div>
+        {isAdmin && <div className="text-center font-semibold text-sm lg:text-base">Ações</div>}
       </div>
 
       <div className="h-1" />
@@ -31,7 +40,7 @@ export default function ServicesTable({ services }: { services: Service[] }) {
           services.map((service) => (
             <div
               key={service.id} // Chave única para cada item da lista
-              className="grid grid-cols-2 lg:grid-cols-3 items-center"
+              className={`grid ${isAdmin ? 'grid-cols-4' : 'grid-cols-3'} items-center`}
             >
               <div className="pl-12 text-sm lg:text-base ">{service.name}</div>
               <div className="text-center text-sm lg:text-base">
@@ -40,6 +49,22 @@ export default function ServicesTable({ services }: { services: Service[] }) {
               <div className="text-center text-sm lg:text-base">
                 R$ {service.price}
               </div>
+              {isAdmin && (
+                <div className="flex justify-center items-center gap-4">
+                  <Link
+                    to={`/editar-servico/${service.id}`}
+                    className="bg-[#B490F0] text-white rounded-[2px] py-[10px] px-[10px] font-semibold transition-all hover:bg-[#8c6fc6] flex items-center justify-center"
+                  >
+                    <img src={editIcon} alt="Editar" className="w-6 h-6" style={{ filter: 'invert(100%)' }} />
+                  </Link>
+                  <button
+                    onClick={() => alert(`Excluir serviço ${service.id}`)}
+                    className="bg-black text-white rounded-[2px] py-[10px] px-[10px] font-semibold cursor-pointer transition-all hover:bg-red-600 flex items-center justify-center"
+                  >
+                    <img src={deleteIcon} alt="Excluir" className="w-6 h-6" style={{ filter: 'invert(100%)' }} />
+                  </button>
+                </div>
+              )}
             </div>
           ))
         ) : (

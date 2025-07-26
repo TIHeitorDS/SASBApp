@@ -1,5 +1,6 @@
 # api/models
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
@@ -124,7 +125,7 @@ class Appointment(models.Model):
     employee = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
-        limit_choices_to={'role': User.Role.EMPLOYEE},
+        limit_choices_to=Q(role=User.Role.EMPLOYEE) | Q(role=User.Role.PROFESSIONAL),
         verbose_name='Funcionário'
     )
     start_time = models.DateTimeField('Data/Hora de Início')

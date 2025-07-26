@@ -12,7 +12,7 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   useEffect(() => {
     document.title = "SASBApp | Login";
@@ -47,7 +47,7 @@ export default function Login() {
       axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
 
       // Redireciona para a página principal da aplicação após o login
-      navigate("/servicos");
+      window.location.href = "/servicos"; //Usado para forçar recarregamento de Auth
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
         setError("Usuário ou senha inválidos.");

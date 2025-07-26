@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import NavButton from "../components/nav-button";
 import ServicesTable from "../components/services-table";
 import apiClient from "../api/client";
+import { useAuth } from "../contexts/AuthContext";
 
 interface Service {
   id: number;
@@ -14,6 +15,7 @@ export default function Services() {
   const [services, setServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     // Função para buscar os dados da API
@@ -44,7 +46,7 @@ export default function Services() {
   return (
     <>
       <ServicesTable services={services} />
-      <NavButton path="/cadastrar-servico" text="Novo Serviço" />
+      {user?.role === 'ADMIN' && <NavButton path="/cadastrar-servico" text="Novo Serviço" />}
     </>
   );
 }

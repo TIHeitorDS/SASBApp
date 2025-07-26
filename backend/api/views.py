@@ -59,9 +59,9 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         employee = self.get_object()
 
 
-class ProfessionalViewSet(viewsets.ModelViewSet):
+class ProfessionalViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ProfessionalSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return User.objects.filter(role=User.Role.PROFESSIONAL).order_by('first_name')
@@ -175,19 +175,35 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         return super().handle_exception(exc)
 
     def get_permissions(self):
+        if self.action == 'create' and self.request.user.role == User.Role.PROFESSIONAL:
+            self.permission_denied(self.request, message='Profissionais não podem criar agendamentos.')
+        
         if self.action in ['create', 'list', 'retrieve', 'update', 'partial_update', 'cancel', 'complete']:
             return [permissions.IsAuthenticated()]
         return [permissions.IsAdminUser()]
 
     def get_queryset(self):
+        user = self.request.user
         queryset = Appointment.objects.select_related('service', 'employee')
 
-        if not self.request.user.is_staff:
-            queryset = queryset.filter(
-                Q(employee=self.request.user) |
-                Q(status=Appointment.Status.RESERVED)
-            )
-        return queryset
+        if not user.is_staff:
+            if user.role == User.Role.PROFESSIONAL:
+                # Profissionais veem apenas seus próprios agendamentos
+                queryset = queryset.filter(employee=user)
+            else:
+                 queryset = queryset.filter(
+                    Q(employee=self.request.user) |
+                    Q(status=Appointment.Status.RESERVED)
+                )
+
+        # Filtro por status
+        status = self.request.query_params.get('status')
+        if status:
+            if status not in dict(Appointment.Status.choices):
+                raise ValidationError({'status': 'Status inválido'})
+            queryset = queryset.filter(status=status)
+            
+        return queryset.order_by('start_time')
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
