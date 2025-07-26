@@ -225,6 +225,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
         source='employee',
         write_only=True
     )
+    notes = serializers.CharField(allow_null=True, required=False)
 
     class Meta:
         model = Appointment
@@ -234,19 +235,17 @@ class AppointmentSerializer(serializers.ModelSerializer):
         read_only_fields = ['end_time', 'status']
 
     def validate(self, data):
-        required_fields = ['client_name', 'client_contact', 'service', 'employee', 'start_time']
-        for field in required_fields:
-            if field not in data or not data[field]:
-                raise serializers.ValidationError({field: "Este campo é obrigatório."})
+        
+        user = self.context['request'].user
 
-        instance = Appointment(**data)
-        instance.end_time = instance.start_time + timedelta(minutes=instance.service.duration)
-        
-        try:
-            instance.clean()
-        except ValidationError as e:
-            raise serializers.ValidationError(e.message_dict)
-        
+        if user.role == User.Role.PROFESSIONAL:
+            if self.instance and 'employee' in data and data['employee'] != self.instance.employee:
+                raise serializers.ValidationError({"employee": "Profissionais não podem alterar o profissional responsável pelo agendamento."})
+            elif not self.instance and 'employee' in data and data['employee'] != user:
+                raise serializers.ValidationError({"employee": "Profissionais só podem criar agendamentos para si mesmos."})
+            elif not self.instance and 'employee' not in data:
+                data['employee'] = user
+
         return data
 
     def create(self, validated_data):

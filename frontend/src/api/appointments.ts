@@ -10,13 +10,13 @@ export interface CreateAppointment {
 }
 
 export interface UpdateAppointment {
-  client_name?: string;
-  client_contact?: string;
-  service_id?: number;
-  employee_id?: number;
-  start_time?: string;
-  notes?: string;
-  status?: string;
+  client_name?: string | null;
+  client_contact?: string | null;
+  service_id?: number | null;
+  employee_id?: number | null;
+  start_time?: string | null;
+  notes?: string | null;
+  status?: string | null;
 }
 
 export interface Appointment {
@@ -91,6 +91,26 @@ export const deleteAppointment = async (id: number): Promise<void> => {
     await apiClient.delete(`/appointments/${id}/`);
   } catch (error) {
     console.error("Erro ao deletar agendamento:", error);
+    throw error;
+  }
+};
+
+export const cancelAppointment = async (id: number): Promise<Appointment> => {
+  try {
+    const response = await apiClient.post(`/appointments/${id}/cancel/`);
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao cancelar agendamento:", error);
+    throw error;
+  }
+};
+
+export const completeAppointment = async (id: number): Promise<Appointment> => {
+  try {
+    const response = await apiClient.post(`/appointments/${id}/complete/`);
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao concluir agendamento:", error);
     throw error;
   }
 };

@@ -6,6 +6,7 @@ export default function Layout({
   children,
   tableColumns = "2",
   onSubmit,
+  buttonText,
 }: {
   title: string;
   children: React.ReactNode;
@@ -29,9 +30,11 @@ export default function Layout({
         )}
       >
         {children}
-        <div className="w-full lg:w-50 mr-auto">
-          <SubmitButton text="Cadastrar" type="submit" />
-        </div>
+        {buttonText && (
+          <div className="w-full lg:w-50 mr-auto">
+            <SubmitButton text={buttonText} type="submit" />
+          </div>
+        )}
       </form>
     </div>
   );

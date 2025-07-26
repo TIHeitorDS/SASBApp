@@ -12,7 +12,14 @@ export default function Navbar() {
   const { user, isLoading } = useAuth();
 
   const isAdmin = user?.role === "ADMIN";
-  const userRole = user?.role === "ADMIN" ? "Administrador" : "Funcionário";
+  let userRole = "";
+  if (user?.role === "ADMIN") {
+    userRole = "Administrador";
+  } else if (user?.role === "EMPLOYEE") {
+    userRole = "Funcionário";
+  } else if (user?.role === "PROFESSIONAL") {
+    userRole = "Profissional";
+  }
 
   return (
     <nav className="flex justify-between items-center px-6 md:px-[100px] h-[80px] md:h-[123px] relative">

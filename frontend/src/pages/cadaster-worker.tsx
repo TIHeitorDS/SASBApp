@@ -104,7 +104,7 @@ export default function CadasterWorker() {
   };
 
   return (
-    <Layout title="Cadastrar Usuário" onSubmit={handleSubmit}> {}
+    <Layout title="Cadastrar Usuário" onSubmit={handleSubmit} buttonText="Cadastrar Funcionário"> {}
       <Input
         type="text"
         placeholder="Nome de usuário"

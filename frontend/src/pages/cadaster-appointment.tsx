@@ -12,7 +12,6 @@ export default function CadasterAppointment() {
     service_id: 0,
     employee_id: 0,
     start_time: "",
-    notes: "",
   });
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -101,7 +100,6 @@ export default function CadasterAppointment() {
           service_id: 0,
           employee_id: 0,
           start_time: "",
-          notes: "",
         });
         setErrors({});
       })
@@ -114,7 +112,7 @@ export default function CadasterAppointment() {
   };
 
   return (
-    <Layout title="Cadastrar Novo Agendamento" onSubmit={handleSubmit}>
+    <Layout title="Cadastrar Novo Agendamento" onSubmit={handleSubmit} buttonText="Cadastrar Agendamento">
       <Input
         type="text"
         placeholder="Nome do Cliente"
@@ -133,11 +131,9 @@ export default function CadasterAppointment() {
         error={!!errors.client_contact}
       />
 
-      <SelectService onServiceSelect={handleServiceSelect} selectedServiceId={formData.service_id} />
-      {errors.service_id && <p className="text-red-500 text-xs italic">{errors.service_id}</p>}
+      <SelectService onServiceSelect={handleServiceSelect} selectedServiceId={formData.service_id} error={!!errors.service_id} />
 
-      <SelectWorker onWorkerSelect={handleWorkerSelect} selectedWorkerId={formData.employee_id} />
-      {errors.employee_id && <p className="text-red-500 text-xs italic">{errors.employee_id}</p>}
+      <SelectWorker onWorkerSelect={handleWorkerSelect} selectedWorkerId={formData.employee_id} error={!!errors.employee_id} />
 
       <Input
         type="datetime-local"
@@ -148,14 +144,6 @@ export default function CadasterAppointment() {
         error={!!errors.start_time}
       />
 
-      <Input
-        type="text"
-        placeholder="Observações (opcional)"
-        theme="black"
-        value={formData.notes || ""}
-        onChange={handleChange("notes")}
-      />
-      
       {message && (
         <div className={`p-3 rounded-md text-center ${
           message.includes("sucesso") 

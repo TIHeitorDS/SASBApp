@@ -138,7 +138,7 @@ class Appointment(models.Model):
         choices=Status.choices,
         default=Status.RESERVED
     )
-    notes = models.TextField('Observações', blank=True)
+    notes = models.TextField('Observações', blank=True, null=True)
     created_at = models.DateTimeField('Criado em', auto_now_add=True)
     updated_at = models.DateTimeField('Atualizado em', auto_now=True)
 
@@ -183,18 +183,27 @@ class Appointment(models.Model):
 
     def _validate_reserved_appointment(self):
         """Validações específicas para agendamentos reservados"""
-        if (not self.pk and self.start_time < timezone.now()) or \
-           (self.pk and self.status == self.Status.RESERVED and self.start_time < timezone.now()):
-            raise ValidationError(
-                {'start_time': "Não é possível agendar para horários passados."}
-            )
+        if self.pk:
+            try:
+                original_appointment = Appointment.objects.get(pk=self.pk)
+                if self.start_time != original_appointment.start_time and self.start_time < timezone.now():
+                    raise ValidationError(
+                        {'start_time': "Não é possível agendar para horários passados."}
+                    )
+            except Appointment.DoesNotExist:
+                pass
+        else:
+            if self.start_time < timezone.now():
+                raise ValidationError(
+                    {'start_time': "Não é possível agendar para horários passados."}
+                )
 
         conflicting = Appointment.objects.filter(
             employee=self.employee,
             start_time__lt=self.end_time,
             end_time__gt=self.start_time,
             status=self.Status.RESERVED
-        ).exclude(pk=getattr(self, 'pk', None))
+        ).exclude(pk=self.pk)
 
         if conflicting.exists():
             raise ValidationError(
@@ -225,8 +234,6 @@ class Appointment(models.Model):
         if self.status != self.Status.RESERVED:
             raise ValidationError("Só é possível cancelar agendamentos reservados.")
 
-        if timezone.now() > self.start_time:
-            raise ValidationError("Não é possível cancelar agendamentos passados.")
 
         self.status = self.Status.CANCELLED
         self.save()

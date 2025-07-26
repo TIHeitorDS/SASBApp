@@ -15,6 +15,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const checkUser = async () => {
+      const accessToken = localStorage.getItem('accessToken');
+      const refreshToken = localStorage.getItem('refreshToken');
+
+      if (!accessToken || !refreshToken) {
+        setUser(null);
+        setIsLoading(false);
+        return;
+      }
+
       try {
         const currentUser = await getMe();
         setUser(currentUser);

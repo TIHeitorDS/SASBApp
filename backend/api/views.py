@@ -191,10 +191,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                 # Profissionais veem apenas seus próprios agendamentos
                 queryset = queryset.filter(employee=user)
             else:
-                 queryset = queryset.filter(
-                    Q(employee=self.request.user) |
-                    Q(status=Appointment.Status.RESERVED)
-                )
+                pass
 
         # Filtro por status
         status = self.request.query_params.get('status')
@@ -214,16 +211,16 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        if not request.user.is_staff and instance.employee != request.user:
+        if request.user.role == User.Role.PROFESSIONAL and instance.employee != request.user:
             return Response(
                 {'status': 'error',
-                    'message': 'Você não tem permissão para editar este agendamento.'},
+                    'message': 'Profissionais só podem editar seus próprios agendamentos.'},
                 status=status.HTTP_403_FORBIDDEN
             )
 
         if instance.status != Appointment.Status.RESERVED:
             return Response(
-                {'status': 'error', 'message': 'Agendamento não pode ser alterado.'},
+                {'status': 'error', 'message': f'Agendamento não pode ser alterado. O status atual é "{instance.get_status_display()}" e apenas agendamentos "Reservado" podem ser modificados.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -244,9 +241,9 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         appointment = self.get_object()
 
         try:
-            if not request.user.is_staff and appointment.employee != request.user:
+            if request.user.role == User.Role.PROFESSIONAL and appointment.employee != request.user:
                 return Response(
-                    {'status': 'error', 'message': 'Permissão negada.'},
+                    {'status': 'error', 'message': 'Permissão negada. Profissionais só podem cancelar seus próprios agendamentos.'},
                     status=status.HTTP_403_FORBIDDEN
                 )
 
@@ -267,9 +264,9 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     def complete(self, request, pk=None):
         try:
             appointment = self.get_object()  
-            if not request.user.is_staff and appointment.employee != request.user:
+            if request.user.role == User.Role.PROFESSIONAL and appointment.employee != request.user:
                 return Response(
-                    {'status': 'error', 'message': 'Permissão negada.'},
+                    {'status': 'error', 'message': 'Permissão negada. Profissionais só podem concluir seus próprios agendamentos.'},
                     status=status.HTTP_403_FORBIDDEN
                 )
             

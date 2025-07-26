@@ -64,6 +64,7 @@ export default function CadasterService() {
       title="Cadastrar Novo Serviço"
       tableColumns="3"
       onSubmit={handleSubmit}
+      buttonText="Cadastrar Serviço"
     >
       <Input
         type="text"
