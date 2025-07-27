@@ -10,7 +10,6 @@ interface Service {
   price: string;
 }
 
-// Função auxiliar para formatar a duração de minutos para horas/minutos
 const formatDuration = (minutes: number) => {
   if (minutes < 60) {
     return `${minutes} min`;
@@ -20,9 +19,17 @@ const formatDuration = (minutes: number) => {
   return mins > 0 ? `${hours}h ${mins}min` : `${hours}h`;
 };
 
-export default function ServicesTable({ services }: { services: Service[] }) {
+export default function ServicesTable({ services, onDeleteService }: { services: Service[], onDeleteService: (id: number) => void }) {
   const { user } = useAuth();
   const isAdmin = user?.role === "ADMIN";
+
+  // Função para confirmar com o usuário antes de deletar
+  const handleDeleteClick = (service: Service) => {
+    const isConfirmed = window.confirm(`Tem certeza que deseja excluir o serviço "${service.name}"? Esta ação não pode ser desfeita.`);
+    if (isConfirmed) {
+      onDeleteService(service.id);
+    }
+  };
 
   return (
     <div className="w-full font-syne">
@@ -39,7 +46,7 @@ export default function ServicesTable({ services }: { services: Service[] }) {
         {services.length > 0 ? (
           services.map((service) => (
             <div
-              key={service.id} // Chave única para cada item da lista
+              key={service.id}
               className={`grid ${isAdmin ? 'grid-cols-4' : 'grid-cols-3'} items-center`}
             >
               <div className="pl-12 text-sm lg:text-base ">{service.name}</div>
@@ -58,7 +65,7 @@ export default function ServicesTable({ services }: { services: Service[] }) {
                     <img src={editIcon} alt="Editar" className="w-6 h-6" style={{ filter: 'invert(100%)' }} />
                   </Link>
                   <button
-                    onClick={() => alert(`Excluir serviço ${service.id}`)}
+                    onClick={() => handleDeleteClick(service)}
                     className="bg-black text-white rounded-[2px] py-[10px] px-[10px] font-semibold cursor-pointer transition-all hover:bg-red-600 flex items-center justify-center"
                   >
                     <img src={deleteIcon} alt="Excluir" className="w-6 h-6" style={{ filter: 'invert(100%)' }} />

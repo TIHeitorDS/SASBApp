@@ -3,6 +3,7 @@ import NavButton from "../components/nav-button";
 import ServicesTable from "../components/services-table";
 import apiClient from "../api/client";
 import { useAuth } from "../contexts/AuthContext";
+import axios from "axios";
 
 interface Service {
   id: number;
@@ -18,7 +19,6 @@ export default function Services() {
   const { user } = useAuth();
 
   useEffect(() => {
-    // Função para buscar os dados da API
     const fetchServices = async () => {
       try {
         const response = await apiClient.get('/services/');
@@ -32,9 +32,27 @@ export default function Services() {
     };
 
     fetchServices();
-  }, []); // O array vazio [] garante que isso rode apenas uma vez
+  }, []);
 
-  // Renderização condicional
+  // --- LÓGICA DE EXCLUSÃO ---
+  const handleDeleteService = async (serviceId: number) => {
+    try {
+      await apiClient.delete(`/services/${serviceId}/`);
+
+      setServices(currentServices =>
+        currentServices.filter(service => service.id !== serviceId)
+      );
+      
+    } catch (err: unknown) {
+      let errorMessage = "Ocorreu um erro ao tentar excluir o serviço.";
+      if (axios.isAxiosError(err) && err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      }
+      alert(`Erro: ${errorMessage}`);
+      console.error(err);
+    }
+  };
+
   if (isLoading) {
     return <p className="text-center mt-10">Carregando serviços...</p>;
   }
@@ -45,7 +63,7 @@ export default function Services() {
 
   return (
     <>
-      <ServicesTable services={services} />
+      <ServicesTable services={services} onDeleteService={handleDeleteService} />
       {user?.role === 'ADMIN' && <NavButton path="/cadastrar-servico" text="Novo Serviço" />}
     </>
   );
