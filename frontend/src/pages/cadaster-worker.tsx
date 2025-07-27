@@ -11,7 +11,7 @@ export default function CadasterWorker() {
     email: "",
     password: "",
     phone: "",
-    role: "EMPLOYEE",
+    role: "",
   });
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -104,7 +104,13 @@ export default function CadasterWorker() {
   };
 
   return (
-    <Layout title="Cadastrar Usuário" onSubmit={handleSubmit} buttonText="Cadastrar Funcionário"> {}
+    <Layout
+      title="Cadastrar Usuário"
+      onSubmit={handleSubmit}
+      buttonText="Cadastrar Funcionário"
+    >
+      {" "}
+      {}
       <Input
         type="text"
         placeholder="Nome de usuário"
@@ -113,7 +119,6 @@ export default function CadasterWorker() {
         onChange={handleChange("username")}
         error={!!errors.username}
       />
-      
       <Input
         type="password"
         placeholder="Senha"
@@ -122,7 +127,6 @@ export default function CadasterWorker() {
         onChange={handleChange("password")}
         error={!!errors.password}
       />
-      
       <Input
         type="text"
         placeholder="Nome"
@@ -131,7 +135,6 @@ export default function CadasterWorker() {
         onChange={handleChange("first_name")}
         error={!!errors.first_name}
       />
-      
       <Input
         type="text"
         placeholder="Sobrenome"
@@ -140,7 +143,6 @@ export default function CadasterWorker() {
         onChange={handleChange("last_name")}
         error={!!errors.last_name}
       />
-      
       <Input
         type="email"
         placeholder="Email"
@@ -149,7 +151,6 @@ export default function CadasterWorker() {
         onChange={handleChange("email")}
         error={!!errors.email}
       />
-      
       <Input
         type="text"
         placeholder="Telefone (opcional)"
@@ -157,42 +158,51 @@ export default function CadasterWorker() {
         value={formData.phone || ""}
         onChange={handleChange("phone")}
       />
-      
       <div className="mb-4">
-        <label htmlFor="role-select" className="block text-gray-700 text-sm font-bold mb-2">
+        {/* <label htmlFor="role-select" className="block text-gray-700 text-sm font-bold mb-2">
           Tipo de Usuário:
-        </label>
+        </label> */}
         <select
           id="role-select"
           name="role"
           value={formData.role}
           onChange={handleChange("role")}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="appearance-none border border-[#c4c4c4] pt-[15px] pb-[17px] pl-[21px] w-full focus:outline-none focus:border-pink focus:ring-1 focus:ring-pink rounded bg-transparent transition-all"
         >
+          <option value="" disabled>
+            Selecione um tipo
+          </option>
           <option value="EMPLOYEE">Funcionário</option>
           <option value="PROFESSIONAL">Profissional</option>
         </select>
       </div>
-      
       {message && (
-        <div className={`p-3 rounded-md text-center ${
-          message.includes("sucesso") 
-            ? "bg-green-100 text-green-800 border border-green-300" 
-            : "bg-red-100 text-red-800 border border-red-300"
-        }`}>
-          {message.includes('\n') ? (
+        <div
+          className={`p-3 rounded-md text-center ${
+            message.includes("sucesso")
+              ? "bg-green-100 text-green-800 border border-green-300"
+              : "bg-red-100 text-red-800 border border-red-300"
+          }`}
+        >
+          {message.includes("\n") ? (
             <div className="text-left">
-              <div className="font-semibold mb-2">Por favor, corrija os seguintes erros:</div>
-              {message.split('\n').slice(1).map((error, index) => (
-                <div key={index} className="ml-4">• {error}</div>
-              ))}
+              <div className="font-semibold mb-2">
+                Por favor, corrija os seguintes erros:
+              </div>
+              {message
+                .split("\n")
+                .slice(1)
+                .map((error, index) => (
+                  <div key={index} className="ml-4">
+                    • {error}
+                  </div>
+                ))}
             </div>
           ) : (
             message
           )}
         </div>
       )}
-      
       {isSubmitting && (
         <div className="text-center text-blue-600">
           Cadastrando funcionário...

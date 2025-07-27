@@ -30,8 +30,9 @@ export default function Layout({
         )}
       >
         {children}
+
         {buttonText && (
-          <div className="w-full lg:w-50 mr-auto">
+          <div className="w-full ml-auto">
             <SubmitButton text={buttonText} type="submit" />
           </div>
         )}
