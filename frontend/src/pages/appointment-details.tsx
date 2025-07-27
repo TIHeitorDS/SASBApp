@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getAppointment, cancelAppointment, completeAppointment, type Appointment as AppointmentType } from "../api/appointments";
 import { useAuth } from "../contexts/AuthContext";
 import Layout from "../ui/cadaster";
@@ -10,7 +10,6 @@ import calendarXmarkIcon from "/calendar-xmark.svg";
 
 export default function AppointmentDetails() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const { user } = useAuth();
 
   const [appointment, setAppointment] = useState<AppointmentType | null>(null);

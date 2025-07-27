@@ -1,7 +1,7 @@
 // login.tsx
 
 import { useEffect, useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 import Input from "../components/input";

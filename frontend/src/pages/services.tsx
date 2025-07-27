@@ -10,6 +10,8 @@ interface Service {
   name: string;
   duration: number;
   price: string;
+  can_edit: boolean;
+  can_delete: boolean;
 }
 
 export default function Services() {

@@ -5,7 +5,6 @@ import calendarIcon from "/calendar.svg";
 import calendarCheckIcon from "/calendar-check.svg";
 import calendarXmarkIcon from "/calendar-xmark.svg";
 import type { Appointment } from "../api/appointments";
-import { useEffect, useState } from "react";
 
 interface AppointmentsTableProps {
   appointments: Appointment[];
@@ -24,7 +23,6 @@ const formatDate = (dateString: string) => {
 
 export default function AppointmentsTable({ appointments }: AppointmentsTableProps) {
   const { user } = useAuth();
-  const canEdit = user?.role === "ADMIN" || user?.role === "EMPLOYEE";
   const canViewInfo = user?.role === "ADMIN" || user?.role === "EMPLOYEE" || user?.role === "PROFESSIONAL";
 
   const getStatusStyling = (status: string) => {

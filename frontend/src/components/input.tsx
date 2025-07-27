@@ -9,8 +9,8 @@ export default function Input({
   type: "email" | "password" | "text" | "datetime-local";
   placeholder: string;
   theme?: "white" | "black";
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: boolean;
 }) {
   const borderType = theme === "white" ? "border-white/25" : "border-[#c4c4c4]";

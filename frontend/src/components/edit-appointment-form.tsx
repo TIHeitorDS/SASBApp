@@ -3,7 +3,6 @@ import Input from "./input";
 import SelectService from "./select-service";
 import SelectWorker from "./select-worker";
 import { updateAppointment, type Appointment as AppointmentType, type UpdateAppointment } from "../api/appointments";
-import SubmitButton from "./submit-button";
 import { useAuth } from "../contexts/AuthContext";
 
 interface EditAppointmentFormProps {
