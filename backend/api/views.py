@@ -124,6 +124,23 @@ class ServiceViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(is_active=True)
 
         return queryset
+    
+    # --- LÓGICA DE ATUALIZAÇÃO  ---
+    def update(self, request, *args, **kwargs):
+        service = self.get_object()
+
+        # A MESMA VERIFICAÇÃO USADA NO 'DESTROY'
+        if service.appointments.filter(
+            start_time__gt=timezone.now(),
+            status=Appointment.Status.RESERVED
+        ).exists():
+            return Response(
+                {"error": "service_has_future_appointments",
+                 "message": "Não é possível editar um serviço com agendamentos futuros"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        return super().update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
         service = self.get_object()

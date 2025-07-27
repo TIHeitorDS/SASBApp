@@ -4,12 +4,15 @@ import { Link } from "react-router-dom";
 import editIcon from "/edit.svg";
 import deleteIcon from "/bin.svg";
 import ConfirmationModal from './ConfirmationModal';
+import clsx from 'clsx'; 
 
 interface Service {
   id: number;
   name: string;
   duration: number;
   price: string;
+  can_edit: boolean; 
+  can_delete: boolean;
 }
 
 const formatDuration = (minutes: number) => {
@@ -73,12 +76,23 @@ export default function ServicesTable({ services, onDeleteService }: { services:
                 </div>
                 {isAdmin && (
                   <div className="flex justify-center items-center gap-4">
-                    <Link
-                      to={`/editar-servico/${service.id}`}
-                      className="bg-[#B490F0] text-white rounded-[2px] py-[10px] px-[10px] font-semibold transition-all hover:bg-[#8c6fc6] flex items-center justify-center"
-                    >
-                      <img src={editIcon} alt="Editar" className="w-6 h-6" style={{ filter: 'invert(100%)' }} />
-                    </Link>
+               <Link
+                    to={`/editar-servico/${service.id}`}
+                    // Aplica classes de desabilitado se 'can_edit' for falso
+                    className={clsx(
+                      "bg-[#B490F0] text-white rounded-[2px] py-[10px] px-[10px] font-semibold transition-all flex items-center justify-center",
+                      service.can_edit ? "hover:bg-[#8c6fc6]" : "opacity-50 cursor-not-allowed"
+                    )}
+                    // Previne a navegação se o botão estiver desabilitado
+                    onClick={(e) => {
+                      if (!service.can_edit) {
+                        e.preventDefault();
+                        alert("Não é possível editar um serviço com agendamentos futuros.");
+                      }
+                    }}
+                  >
+                    <img src={editIcon} alt="Editar" className="w-6 h-6" style={{ filter: 'invert(100%)' }} />
+                  </Link>
                     <button
                       onClick={() => handleOpenModal(service)} // O onClick agora abre o modal
                       className="bg-black text-white rounded-[2px] py-[10px] px-[10px] font-semibold cursor-pointer transition-all hover:bg-red-600 flex items-center justify-center"
