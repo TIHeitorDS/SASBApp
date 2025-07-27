@@ -1,19 +1,39 @@
-import { useState, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, type FormEvent } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Input from "../components/input";
 import Layout from "../ui/cadaster";
 import apiClient from "../api/client";
+import SubmitButton from "../components/submit-button";
 
-export default function CadasterService() {
+export default function EditService() {
+  const { serviceId } = useParams<{ serviceId: string }>();
+  const navigate = useNavigate();
+
+  // Estados do formulário
   const [name, setName] = useState("");
   const [duration, setDuration] = useState("");
   const [price, setPrice] = useState("");
-  
+  const [isLoading, setIsLoading] = useState(true);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [message, setMessage] = useState("");
-  
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    apiClient.get(`/services/${serviceId}/`)
+      .then(response => {
+        const service = response.data;
+        setName(service.name);
+        setDuration(String(service.duration));
+        setPrice(String(service.price));
+      })
+      .catch(error => {
+        console.error("Erro ao buscar serviço:", error);
+        setMessage("Erro: Não foi possível carregar os dados do serviço.");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [serviceId]);
 
   const validateForm = (): { isValid: boolean; newErrors: Record<string, string> } => {
     const newErrors: Record<string, string> = {};
@@ -49,18 +69,17 @@ export default function CadasterService() {
       return;
     }
     
-    // Conversão de dados    
     const durationInt = parseInt(duration, 10);
     const priceFloat = parseFloat(price.replace(",", "."));
 
     try {
-      await apiClient.post("/services/", {
+      await apiClient.patch(`/services/${serviceId}/`, {
         name: name,
         duration: durationInt,
         price: priceFloat.toFixed(2),
       });
 
-      setMessage("Serviço cadastrado com sucesso!");
+      setMessage("Sucesso!\nServiço atualizado com sucesso!");
       setTimeout(() => {
         navigate("/servicos");
       }, 1500);
@@ -71,18 +90,29 @@ export default function CadasterService() {
         const errorMessages = Object.values(errorData).flat();
         setMessage(`Por favor, corrija os seguintes erros:\n${errorMessages.join('\n')}`);
       } else {
-        setMessage("Ocorreu um erro desconhecido ao cadastrar o serviço.");
+        setMessage("Ocorreu um erro desconhecido ao atualizar o serviço.");
       }
       console.error(err);
     }
   };
+  
+  const handleCancel = () => {
+    navigate("/servicos");
+  };
+
+  if (isLoading) {
+    return (
+      <Layout title="Editar Serviço" onSubmit={() => {}}>
+        <p className="text-center">Carregando dados do serviço...</p>
+      </Layout>
+    );
+  }
 
   return (
     <Layout
-      title="Cadastrar Novo Serviço"
+      title="Editar Serviço"
       tableColumns="3"
       onSubmit={handleSubmit}
-      buttonText="Cadastrar Serviço"
     >
       <Input
         type="text"
@@ -102,17 +132,17 @@ export default function CadasterService() {
       />
       <Input
         type="text"
-        placeholder="Preço (ex: 160.00)"
+        placeholder="Preço (ex: 160,00)"
         theme="black"
         value={price}
         onChange={(e) => setPrice(e.target.value)}
-        error={!!errors.price} 
+        error={!!errors.price}
       />
       
       <div className="lg:col-span-3">
         {message && (
           <div className={`p-4 rounded-md text-sm ${
-            message.includes("sucesso") 
+            message.startsWith("Sucesso")
               ? "bg-green-100 text-green-800 border border-green-300" 
               : "bg-red-100 text-red-800 border border-red-300"
           }`}>
@@ -120,8 +150,8 @@ export default function CadasterService() {
               <div className="text-left">
                 <div className="font-bold mb-2">{message.split('\n')[0]}</div>
                 <ul className="list-disc pl-5">
-                  {message.split('\n').slice(1).map((error, index) => (
-                    <li key={index}>{error}</li>
+                  {message.split('\n').slice(1).map((line, index) => (
+                    <li key={index}>{line}</li>
                   ))}
                 </ul>
               </div>
@@ -130,6 +160,17 @@ export default function CadasterService() {
             )}
           </div>
         )}
+      </div>
+      
+      <div className="lg:col-span-3 mt-4 flex justify-end gap-4">
+        <button
+          type="button"
+          onClick={handleCancel}
+          className="px-6 py-3 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 font-semibold"
+        >
+          Cancelar
+        </button>
+        <SubmitButton text="Salvar Alterações" type="submit" />
       </div>
     </Layout>
   );

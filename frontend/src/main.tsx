@@ -13,6 +13,7 @@ import Services from "./pages/services.tsx";
 import Team from "./pages/team.tsx";
 import CadasterAppointment from "./pages/cadaster-appointment.tsx";
 import CadasterService from "./pages/cadaster-service.tsx";
+import EditService from './pages/edit-service.tsx';
 import CadasterWorker from "./pages/cadaster-worker.tsx";
 import EditWorker from "./pages/edit-worker.tsx";
 import AppointmentDetails from "./pages/appointment-details.tsx";
@@ -42,6 +43,7 @@ createRoot(document.getElementById("root")!).render(
               element={<CadasterAppointment />}
             />
             <Route path="cadastrar-servico" element={<CadasterService />} />
+            <Route path="editar-servico/:serviceId" element={<EditService />} />
           <Route path="cadastrar-funcionario" element={<CadasterWorker />} />
           <Route path="editar-funcionario/:id" element={<EditWorker />} />
           <Route path="detalhes-agendamento/:id" element={<AppointmentDetails />} />

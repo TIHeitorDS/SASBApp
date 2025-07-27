@@ -187,12 +187,20 @@ class ProfessionalSerializer(UserSerializer):
 
 class ServiceSerializer(serializers.ModelSerializer):
     can_delete = serializers.SerializerMethodField()
+    can_edit = serializers.SerializerMethodField() 
 
     class Meta:
         model = Service
-        fields = ['id', 'name', 'duration', 'price', 'is_active', 'can_delete']
+        fields = ['id', 'name', 'duration', 'price', 'is_active', 'can_delete', 'can_edit']
 
     def get_can_delete(self, obj):
+        return not obj.appointments.filter(
+            start_time__gt=timezone.now(),
+            status=Appointment.Status.RESERVED
+        ).exists()
+    
+    def get_can_edit(self, obj):
+        # Por enquanto, a regra é a mesma de 'can_delete'
         return not obj.appointments.filter(
             start_time__gt=timezone.now(),
             status=Appointment.Status.RESERVED
