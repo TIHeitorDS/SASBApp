@@ -1,9 +1,5 @@
-// login.tsx
-
 import { useEffect, useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
-
 import Input from "../components/input";
 import SubmitButton from "../components/submit-button";
 import Layout from "../ui/login-signup";
@@ -77,30 +73,10 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <div className="flex gap-3 items-center">
-          <input
-            type="checkbox"
-            name="remember"
-            id="remember"
-            className="w-5 h-5 appearance-none border border-white/25 checked:bg-pink cursor-pointer"
-          />
-          <label htmlFor="remember">Lembrar de mim</label>
-        </div>
-
         {error && <p className="text-red-500 text-center text-sm">{error}</p>}
 
         <SubmitButton text="Entrar" type="submit" />
       </form>
-
-      <p className="text-center mt-8">
-        Não tem uma conta?{" "}
-        <Link
-          to={"/signup"}
-          className="text-pink underline underline-offset-2 hover:text-pink/90 transition-all"
-        >
-          Cadastrar-se
-        </Link>
-      </p>
     </Layout>
   );
 }

@@ -6,7 +6,6 @@ import { AuthProvider } from "./contexts/AuthContext.tsx";
 
 // Componentes e Páginas
 import Login from "./pages/login.tsx";
-import SignUp from "./pages/signup.tsx";
 import Appointment from "./pages/appointment.tsx";
 import Layout from "./ui/dashboard.tsx"; 
 import Services from "./pages/services.tsx";
@@ -26,7 +25,6 @@ createRoot(document.getElementById("root")!).render(
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
           <Route
             path="/"
             element={
