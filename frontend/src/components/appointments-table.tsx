@@ -1,4 +1,4 @@
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/useAuth";
 import { Link } from "react-router-dom";
 import infoIcon from "/info.svg";
 import calendarIcon from "/calendar.svg";

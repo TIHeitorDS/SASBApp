@@ -1,15 +1,15 @@
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import icon from "../assets/SASBApp-logo.svg";
 import arrowDown from "../assets/arrow-down.svg";
 import { useState } from "react";
 import menuIcon from "../assets/open-menu.svg";
 import closeIcon from "../assets/close-menu.svg";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/useAuth";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showExitButton, setShowExitButton] = useState(false);
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, logout } = useAuth();
 
   const isAdmin = user?.role === "ADMIN";
   let userRole = "";
@@ -40,7 +40,6 @@ export default function Navbar() {
             Agendamentos
           </NavLink>
         </li>
-
         <li>
           <NavLink
             to={"servicos"}
@@ -53,7 +52,6 @@ export default function Navbar() {
             Serviços
           </NavLink>
         </li>
-
         {isAdmin && (
           <li>
             <NavLink
@@ -90,12 +88,12 @@ export default function Navbar() {
         </button>
 
         {showExitButton && (
-          <Link
-            to="/login"
-            className="bg-black text-white absolute bottom-1 inset-x-0 text-center py-1.5"
+          <button
+            onClick={logout}
+            className="bg-black text-white absolute bottom-1 inset-x-0 text-center py-1.5 w-full hover:bg-red-600 transition-colors"
           >
             Sair
-          </Link>
+          </button>
         )}
       </div>
 
@@ -148,18 +146,18 @@ export default function Navbar() {
               Equipe
             </NavLink>
           )}
+
           <div className="w-full flex items-center gap-2 mt-4">
             <p className="font-semibold">
               {isLoading ? "Carregando..." : user ? `Logado como ${user.username} (${userRole})` : "Não autenticado"}
             </p>
-
             <div className="ml-auto">
-              <Link
-                to="/login"
-                className="bg-black text-white px-12 text-center py-1.5"
+              <button
+                onClick={logout}
+                className="bg-black text-white px-12 text-center py-1.5 hover:bg-red-600 transition-colors"
               >
                 Sair
-              </Link>
+              </button>
             </div>
           </div>
         </div>

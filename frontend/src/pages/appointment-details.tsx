@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getAppointment, cancelAppointment, completeAppointment, type Appointment as AppointmentType } from "../api/appointments";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/useAuth";
 import Layout from "../ui/cadaster";
 import EditAppointmentForm from "../components/edit-appointment-form";
 import editIcon from "/edit.svg";

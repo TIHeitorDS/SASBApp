@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import NavButton from "../components/nav-button";
 import AppointmentsTable from "../components/appointments-table";
 import { getAppointments, type Appointment as AppointmentType } from "../api/appointments";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/useAuth";
 
 export default function Appointment() {
   const [appointments, setAppointments] = useState<AppointmentType[]>([]);

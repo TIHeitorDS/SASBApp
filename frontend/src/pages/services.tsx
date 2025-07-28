@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import NavButton from "../components/nav-button";
 import ServicesTable from "../components/services-table";
 import apiClient from "../api/client";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/useAuth";
 import axios from "axios";
 
 interface Service {
