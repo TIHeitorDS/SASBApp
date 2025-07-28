@@ -52,7 +52,7 @@ export default function ServicesTable({ services, onDeleteService }: { services:
     <>
       <div className="w-full font-syne">
         <div className={`grid ${isAdmin ? 'grid-cols-4' : 'grid-cols-3'} bg-gray-secondary/3 border-[0.5px] border-gray py-3`}>
-          <div className="text-center lg:text-start text-sm lg:text-base lg-pl-12 font-semibold">Serviço</div>
+          <div className="text-center lg:text-start text-sm lg:text-base lg:pl-12 font-semibold">Serviço</div>
           <div className="text-center font-semibold text-sm lg:text-base">Duração</div>
           <div className="text-center font-semibold text-sm lg:text-base ">Preço</div>
           {isAdmin && <div className="text-center font-semibold text-sm lg:text-base">Ações</div>}

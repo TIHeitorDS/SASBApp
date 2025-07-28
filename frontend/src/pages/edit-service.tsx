@@ -170,7 +170,10 @@ export default function EditService() {
         >
           Cancelar
         </button>
+        <div>
         <SubmitButton text="Salvar Alterações" type="submit" />
+
+        </div>
       </div>
     </Layout>
   );
