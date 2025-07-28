@@ -3,11 +3,12 @@ from django.http import Http404
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import DatabaseError, IntegrityError
 from rest_framework import viewsets, permissions, status, filters
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.utils import timezone
 from .models import Service, Appointment, User
-from .serializers import ServiceSerializer, EmployeeSerializer, AppointmentSerializer, UserSerializer
+from .serializers import ServiceSerializer, EmployeeSerializer, ProfessionalSerializer, AppointmentSerializer, UserSerializer
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -18,9 +19,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = User.objects.all().order_by('first_name')
-        role = self.request.query_params.get('role')
-        if role and role.upper() in User.Role.values:
-            queryset = queryset.filter(role=role.upper())
+        roles_param = self.request.query_params.get('role')
+        if roles_param:
+            roles_list = [r.strip().upper() for r in roles_param.split(',') if r.strip().upper() in User.Role.values]
+            if roles_list:
+                queryset = queryset.filter(role__in=roles_list)
         return queryset
 
     def perform_create(self, serializer):
@@ -55,14 +58,28 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         employee = self.get_object()
 
+
+class ProfessionalViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = ProfessionalSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return User.objects.filter(role=User.Role.PROFESSIONAL).order_by('first_name')
+
+    def perform_create(self, serializer):
+        serializer.save(role=User.Role.PROFESSIONAL, is_staff=False)
+
+    def destroy(self, request, *args, **kwargs):
+        professional = self.get_object()
+
         if Appointment.objects.filter(
-            employee=employee,
+            employee=professional,
             start_time__gt=timezone.now(),
             status=Appointment.Status.RESERVED
         ).exists():
             return Response(
-                {"error": "employee_has_future_appointments",
-                 "message": "Não é possível remover funcionário com agendamentos futuros"},
+                {"error": "professional_has_future_appointments",
+                 "message": "Não é possível remover profissional com agendamentos futuros"},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -107,6 +124,23 @@ class ServiceViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(is_active=True)
 
         return queryset
+    
+    # --- LÓGICA DE ATUALIZAÇÃO  ---
+    def update(self, request, *args, **kwargs):
+        service = self.get_object()
+
+        # A MESMA VERIFICAÇÃO USADA NO 'DESTROY'
+        if service.appointments.filter(
+            start_time__gt=timezone.now(),
+            status=Appointment.Status.RESERVED
+        ).exists():
+            return Response(
+                {"error": "service_has_future_appointments",
+                 "message": "Não é possível editar um serviço com agendamentos futuros"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        return super().update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
         service = self.get_object()
@@ -158,19 +192,32 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         return super().handle_exception(exc)
 
     def get_permissions(self):
+        if self.action == 'create' and self.request.user.role == User.Role.PROFESSIONAL:
+            self.permission_denied(self.request, message='Profissionais não podem criar agendamentos.')
+        
         if self.action in ['create', 'list', 'retrieve', 'update', 'partial_update', 'cancel', 'complete']:
             return [permissions.IsAuthenticated()]
         return [permissions.IsAdminUser()]
 
     def get_queryset(self):
+        user = self.request.user
         queryset = Appointment.objects.select_related('service', 'employee')
 
-        if not self.request.user.is_staff:
-            queryset = queryset.filter(
-                Q(employee=self.request.user) |
-                Q(status=Appointment.Status.RESERVED)
-            )
-        return queryset
+        if not user.is_staff:
+            if user.role == User.Role.PROFESSIONAL:
+                # Profissionais veem apenas seus próprios agendamentos
+                queryset = queryset.filter(employee=user)
+            else:
+                pass
+
+        # Filtro por status
+        status = self.request.query_params.get('status')
+        if status:
+            if status not in dict(Appointment.Status.choices):
+                raise ValidationError({'status': 'Status inválido'})
+            queryset = queryset.filter(status=status)
+            
+        return queryset.order_by('start_time')
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -181,16 +228,16 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        if not request.user.is_staff and instance.employee != request.user:
+        if request.user.role == User.Role.PROFESSIONAL and instance.employee != request.user:
             return Response(
                 {'status': 'error',
-                    'message': 'Você não tem permissão para editar este agendamento.'},
+                    'message': 'Profissionais só podem editar seus próprios agendamentos.'},
                 status=status.HTTP_403_FORBIDDEN
             )
 
         if instance.status != Appointment.Status.RESERVED:
             return Response(
-                {'status': 'error', 'message': 'Agendamento não pode ser alterado.'},
+                {'status': 'error', 'message': f'Agendamento não pode ser alterado. O status atual é "{instance.get_status_display()}" e apenas agendamentos "Reservado" podem ser modificados.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -211,9 +258,9 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         appointment = self.get_object()
 
         try:
-            if not request.user.is_staff and appointment.employee != request.user:
+            if request.user.role == User.Role.PROFESSIONAL and appointment.employee != request.user:
                 return Response(
-                    {'status': 'error', 'message': 'Permissão negada.'},
+                    {'status': 'error', 'message': 'Permissão negada. Profissionais só podem cancelar seus próprios agendamentos.'},
                     status=status.HTTP_403_FORBIDDEN
                 )
 
@@ -234,9 +281,9 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     def complete(self, request, pk=None):
         try:
             appointment = self.get_object()  
-            if not request.user.is_staff and appointment.employee != request.user:
+            if request.user.role == User.Role.PROFESSIONAL and appointment.employee != request.user:
                 return Response(
-                    {'status': 'error', 'message': 'Permissão negada.'},
+                    {'status': 'error', 'message': 'Permissão negada. Profissionais só podem concluir seus próprios agendamentos.'},
                     status=status.HTTP_403_FORBIDDEN
                 )
             
@@ -262,3 +309,10 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                 {'status': 'error', 'message': 'Erro ao concluir agendamento'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def me(request):
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data)

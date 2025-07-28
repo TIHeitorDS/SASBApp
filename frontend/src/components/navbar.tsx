@@ -1,14 +1,25 @@
-import { Link, NavLink } from "react-router";
+import { NavLink } from "react-router-dom";
 import icon from "../assets/SASBApp-logo.svg";
-import userProfile from "../assets/user-profile.png";
 import arrowDown from "../assets/arrow-down.svg";
 import { useState } from "react";
 import menuIcon from "../assets/open-menu.svg";
 import closeIcon from "../assets/close-menu.svg";
+import { useAuth } from "../contexts/useAuth";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showExitButton, setShowExitButton] = useState(false);
+  const { user, isLoading, logout } = useAuth();
+
+  const isAdmin = user?.role === "ADMIN";
+  let userRole = "";
+  if (user?.role === "ADMIN") {
+    userRole = "Administrador";
+  } else if (user?.role === "EMPLOYEE") {
+    userRole = "Funcionário";
+  } else if (user?.role === "PROFESSIONAL") {
+    userRole = "Profissional";
+  }
 
   return (
     <nav className="flex justify-between items-center px-6 md:px-[100px] h-[80px] md:h-[123px] relative">
@@ -29,7 +40,6 @@ export default function Navbar() {
             Agendamentos
           </NavLink>
         </li>
-
         <li>
           <NavLink
             to={"servicos"}
@@ -42,29 +52,26 @@ export default function Navbar() {
             Serviços
           </NavLink>
         </li>
-
-        <li>
-          <NavLink
-            to={"equipe"}
-            className={({ isActive }) =>
-              isActive
-                ? "font-bold"
-                : "font-normal hover:font-bold transition-all"
-            }
-          >
-            Equipe
-          </NavLink>
-        </li>
+        {isAdmin && (
+          <li>
+            <NavLink
+              to={"equipe"}
+              className={({ isActive }) =>
+                isActive
+                  ? "font-bold"
+                  : "font-normal hover:font-bold transition-all"
+              }
+            >
+              Equipe
+            </NavLink>
+          </li>
+        )}
       </ul>
 
       <div className="hidden md:flex items-center gap-4 relative h-full">
-        <img
-          src={userProfile}
-          alt="foto de perfil do usuário"
-          className="w-8 h-8 rounded-full"
-        />
-
-        <p>Maria</p>
+        <p className="font-semibold">
+          {isLoading ? "Carregando..." : user ? `Logado como ${user.username} (${userRole})` : "Não autenticado"}
+        </p>
 
         <button
           type="button"
@@ -81,12 +88,12 @@ export default function Navbar() {
         </button>
 
         {showExitButton && (
-          <Link
-            to="/login"
-            className="bg-black text-white absolute bottom-1 inset-x-0 text-center py-1.5"
+          <button
+            onClick={logout}
+            className="bg-black text-white absolute bottom-1 inset-x-0 text-center py-1.5 w-full hover:bg-red-600 transition-colors"
           >
             Sair
-          </Link>
+          </button>
         )}
       </div>
 
@@ -126,32 +133,31 @@ export default function Navbar() {
           >
             Serviços
           </NavLink>
-          <NavLink
-            to={"equipe"}
-            className={({ isActive }) =>
-              isActive
-                ? "font-bold"
-                : "font-normal hover:font-bold transition-all"
-            }
-            onClick={() => setMenuOpen(false)}
-          >
-            Equipe
-          </NavLink>
-          <div className="w-full flex items-center gap-2 mt-4">
-            <img
-              src={userProfile}
-              alt="foto de perfil do usuário"
-              className="w-8 h-8 rounded-full"
-            />
-            <p>Maria</p>
+          {isAdmin && (
+            <NavLink
+              to={"equipe"}
+              className={({ isActive }) =>
+                isActive
+                  ? "font-bold"
+                  : "font-normal hover:font-bold transition-all"
+              }
+              onClick={() => setMenuOpen(false)}
+            >
+              Equipe
+            </NavLink>
+          )}
 
+          <div className="w-full flex items-center gap-2 mt-4">
+            <p className="font-semibold">
+              {isLoading ? "Carregando..." : user ? `Logado como ${user.username} (${userRole})` : "Não autenticado"}
+            </p>
             <div className="ml-auto">
-              <Link
-                to="/login"
-                className="bg-black text-white px-12 text-center py-1.5"
+              <button
+                onClick={logout}
+                className="bg-black text-white px-12 text-center py-1.5 hover:bg-red-600 transition-colors"
               >
                 Sair
-              </Link>
+              </button>
             </div>
           </div>
         </div>

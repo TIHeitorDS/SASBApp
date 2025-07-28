@@ -1,5 +1,6 @@
 # api/models
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
@@ -12,9 +13,10 @@ class User(AbstractUser):
     class Role(models.TextChoices):
         ADMIN = 'ADMIN', 'Administrador'
         EMPLOYEE = 'EMPLOYEE', 'Funcionário'
+        PROFESSIONAL = 'PROFESSIONAL', 'Profissional'
 
     role = models.CharField(
-        max_length=8,
+        max_length=12,
         choices=Role.choices,
         default=Role.EMPLOYEE
     )
@@ -22,7 +24,9 @@ class User(AbstractUser):
     is_staff = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        """Garante que admins sejam staff"""
+        """Garante que admins sejam staff e username seja minúsculo"""
+        if self.username:
+            self.username = self.username.lower()
         if self.role == self.Role.ADMIN:
             self.is_staff = True
         super().save(*args, **kwargs)
@@ -67,6 +71,22 @@ class Employee(User):
         return super().get_queryset().filter(role=User.Role.EMPLOYEE)
 
 
+class Professional(User):
+    class Meta:
+        proxy = True
+        verbose_name = 'Profissional'
+        verbose_name_plural = 'Profissionais'
+
+    def save(self, *args, **kwargs):
+        self.role = User.Role.PROFESSIONAL
+        self.is_staff = False
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def get_queryset(cls):
+        return super().get_queryset().filter(role=User.Role.PROFESSIONAL)
+
+
 class Service(models.Model):
     name = models.CharField(max_length=100, unique=True)
     duration = models.PositiveIntegerField(
@@ -105,7 +125,7 @@ class Appointment(models.Model):
     employee = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
-        limit_choices_to={'role': User.Role.EMPLOYEE},
+        limit_choices_to=Q(role=User.Role.EMPLOYEE) | Q(role=User.Role.PROFESSIONAL),
         verbose_name='Funcionário'
     )
     start_time = models.DateTimeField('Data/Hora de Início')
@@ -118,7 +138,7 @@ class Appointment(models.Model):
         choices=Status.choices,
         default=Status.RESERVED
     )
-    notes = models.TextField('Observações', blank=True)
+    notes = models.TextField('Observações', blank=True, null=True)
     created_at = models.DateTimeField('Criado em', auto_now_add=True)
     updated_at = models.DateTimeField('Atualizado em', auto_now=True)
 
@@ -163,18 +183,27 @@ class Appointment(models.Model):
 
     def _validate_reserved_appointment(self):
         """Validações específicas para agendamentos reservados"""
-        if (not self.pk and self.start_time < timezone.now()) or \
-           (self.pk and self.status == self.Status.RESERVED and self.start_time < timezone.now()):
-            raise ValidationError(
-                {'start_time': "Não é possível agendar para horários passados."}
-            )
+        if self.pk:
+            try:
+                original_appointment = Appointment.objects.get(pk=self.pk)
+                if self.start_time != original_appointment.start_time and self.start_time < timezone.now():
+                    raise ValidationError(
+                        {'start_time': "Não é possível agendar para horários passados."}
+                    )
+            except Appointment.DoesNotExist:
+                pass
+        else:
+            if self.start_time < timezone.now():
+                raise ValidationError(
+                    {'start_time': "Não é possível agendar para horários passados."}
+                )
 
         conflicting = Appointment.objects.filter(
             employee=self.employee,
             start_time__lt=self.end_time,
             end_time__gt=self.start_time,
             status=self.Status.RESERVED
-        ).exclude(pk=getattr(self, 'pk', None))
+        ).exclude(pk=self.pk)
 
         if conflicting.exists():
             raise ValidationError(
@@ -205,8 +234,6 @@ class Appointment(models.Model):
         if self.status != self.Status.RESERVED:
             raise ValidationError("Só é possível cancelar agendamentos reservados.")
 
-        if timezone.now() > self.start_time:
-            raise ValidationError("Não é possível cancelar agendamentos passados.")
 
         self.status = self.Status.CANCELLED
         self.save()
