@@ -19,7 +19,7 @@ export default function Layout() {
 
       <hr className="text-gray" />
 
-      <div className="lg:w-[932px] p-5 lg:p-0 min-h-screen mx-auto mt-[100px]">
+      <div className="lg:w-[932px] p-5 lg:p-0 mt-8 mx-auto">
         <Outlet />
       </div>
     </>
