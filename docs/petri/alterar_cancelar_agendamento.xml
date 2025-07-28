@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><pnml>
     <net id="Net-One" type="P/T net">
         <token id="Default" enabled="true" red="0" green="0" blue="0"/>
-        <place id="p_agendamento_atualizado">
+        <place id="detalhe_do_agendamento">
             <graphics>
-                <position x="1410.0" y="90.0"/>
+                <position x="300.0" y="210.0"/>
             </graphics>
             <name>
-                <value>agendamento_atualizado</value>
+                <value>detalhe_do_agendamento</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -21,12 +21,12 @@
                 <value>0</value>
             </capacity>
         </place>
-        <place id="p_agendamento_selecionado_alteracao">
+        <place id="detalhes_do_cancelamento">
             <graphics>
-                <position x="540.0" y="90.0"/>
+                <position x="120.0" y="75.0"/>
             </graphics>
             <name>
-                <value>agendamento_selecionado_alteracao</value>
+                <value>detalhes_do_cancelamento</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -41,12 +41,12 @@
                 <value>0</value>
             </capacity>
         </place>
-        <place id="p_agendamento_selecionado_cancelamento">
+        <place id="exibir_formulário">
             <graphics>
-                <position x="690.0" y="360.0"/>
+                <position x="480.0" y="210.0"/>
             </graphics>
             <name>
-                <value>agendamento_selecionado_cancelamento</value>
+                <value>exibir_formulário</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -61,192 +61,12 @@
                 <value>0</value>
             </capacity>
         </place>
-        <place id="p_agendamento_status_cancelado">
+        <place id="informacoes_alteradas">
             <graphics>
-                <position x="1290.0" y="360.0"/>
+                <position x="660.0" y="210.0"/>
             </graphics>
             <name>
-                <value>agendamento_status_cancelado</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <initialMarking>
-                <value>Default,0</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </initialMarking>
-            <capacity>
-                <value>0</value>
-            </capacity>
-        </place>
-        <place id="p_alteracao_validada">
-            <graphics>
-                <position x="1140.0" y="90.0"/>
-            </graphics>
-            <name>
-                <value>alteracao_validada</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <initialMarking>
-                <value>Default,0</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </initialMarking>
-            <capacity>
-                <value>0</value>
-            </capacity>
-        </place>
-        <place id="p_confirmacao_alteracao_pendente">
-            <graphics>
-                <position x="1260.0" y="90.0"/>
-            </graphics>
-            <name>
-                <value>confirmacao_alteracao_pendente</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <initialMarking>
-                <value>Default,0</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </initialMarking>
-            <capacity>
-                <value>0</value>
-            </capacity>
-        </place>
-        <place id="p_confirmacao_cancelamento_pendente">
-            <graphics>
-                <position x="1080.0" y="360.0"/>
-            </graphics>
-            <name>
-                <value>confirmacao_cancelamento_pendente</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <initialMarking>
-                <value>Default,0</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </initialMarking>
-            <capacity>
-                <value>0</value>
-            </capacity>
-        </place>
-        <place id="p_detalhes_agendamento_exibidos_alteracao">
-            <graphics>
-                <position x="720.0" y="90.0"/>
-            </graphics>
-            <name>
-                <value>detalhes_agendamento_exibidos_alteracao</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <initialMarking>
-                <value>Default,0</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </initialMarking>
-            <capacity>
-                <value>0</value>
-            </capacity>
-        </place>
-        <place id="p_detalhes_agendamento_exibidos_cancelamento">
-            <graphics>
-                <position x="900.0" y="360.0"/>
-            </graphics>
-            <name>
-                <value>detalhes_agendamento_exibidos_cancelamento</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <initialMarking>
-                <value>Default,0</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </initialMarking>
-            <capacity>
-                <value>0</value>
-            </capacity>
-        </place>
-        <place id="p_erro_alteracao_campos_invalidos">
-            <graphics>
-                <position x="870.0" y="150.0"/>
-            </graphics>
-            <name>
-                <value>erro_alteracao_campos_invalidos</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <initialMarking>
-                <value>Default,0</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </initialMarking>
-            <capacity>
-                <value>0</value>
-            </capacity>
-        </place>
-        <place id="p_erro_alteracao_nao_existente_reservado">
-            <graphics>
-                <position x="300.0" y="90.0"/>
-            </graphics>
-            <name>
-                <value>erro_alteracao_nao_existente_reservado</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <initialMarking>
-                <value>Default,0</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </initialMarking>
-            <capacity>
-                <value>0</value>
-            </capacity>
-        </place>
-        <place id="p_erro_alteracao_nenhuma_alteracao">
-            <graphics>
-                <position x="1380.0" y="150.0"/>
-            </graphics>
-            <name>
-                <value>erro_alteracao_nenhuma_alteracao</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <initialMarking>
-                <value>Default,0</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </initialMarking>
-            <capacity>
-                <value>0</value>
-            </capacity>
-        </place>
-        <place id="p_erro_alteracao_tecnico">
-            <graphics>
-                <position x="1590.0" y="150.0"/>
-            </graphics>
-            <name>
-                <value>erro_alteracao_tecnico</value>
+                <value>informacoes_alteradas</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -281,66 +101,6 @@
                 <value>0</value>
             </capacity>
         </place>
-        <place id="p_historico_agendamentos_inicio">
-            <graphics>
-                <position x="300.0" y="210.0"/>
-            </graphics>
-            <name>
-                <value>historico_agendamentos_inicio</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <initialMarking>
-                <value>Default,0</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </initialMarking>
-            <capacity>
-                <value>0</value>
-            </capacity>
-        </place>
-        <place id="p_lista_agendamentos_ativos_exibida">
-            <graphics>
-                <position x="420.0" y="210.0"/>
-            </graphics>
-            <name>
-                <value>lista_agendamentos_ativos_exibida</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <initialMarking>
-                <value>Default,0</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </initialMarking>
-            <capacity>
-                <value>0</value>
-            </capacity>
-        </place>
-        <place id="p_nova_data_horario_profissional_selecionados">
-            <graphics>
-                <position x="960.0" y="90.0"/>
-            </graphics>
-            <name>
-                <value>nova_data_horario_profissional_selecionados</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <initialMarking>
-                <value>Default,0</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </initialMarking>
-            <capacity>
-                <value>0</value>
-            </capacity>
-        </place>
         <place id="p_painel_funcionario">
             <graphics>
                 <position x="180.0" y="210.0"/>
@@ -361,64 +121,52 @@
                 <value>0</value>
             </capacity>
         </place>
-        <transition id="alteracao_invalida">
+        <place id="processando_cancelamento">
             <graphics>
-                <position x="960.0" y="150.0"/>
+                <position x="300.0" y="75.0"/>
             </graphics>
             <name>
-                <value>alteracao_invalida</value>
+                <value>processando_cancelamento</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
             </name>
-            <orientation>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
                 <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="alteracao_valida">
+            </capacity>
+        </place>
+        <place id="processando_dados">
             <graphics>
-                <position x="1050.0" y="90.0"/>
+                <position x="765.0" y="120.0"/>
             </graphics>
             <name>
-                <value>alteracao_valida</value>
+                <value>processando_dados</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
             </name>
-            <orientation>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
                 <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="t_acessar_painel_funcionario">
+            </capacity>
+        </place>
+        <transition id="acessar_tela_agendamento">
             <graphics>
                 <position x="120.0" y="210.0"/>
             </graphics>
             <name>
-                <value>acessar_painel_funcionario</value>
+                <value>acessar_tela_agendamento</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -439,14 +187,14 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="t_agendamento_nao_existente_reservado">
+        <transition id="agendamento_alterado_com_sucesso">
             <graphics>
-                <position x="420.0" y="90.0"/>
+                <position x="660.0" y="45.0"/>
             </graphics>
             <name>
-                <value>agendamento_nao_existente_reservado</value>
+                <value>agendamento_alterado_com_sucesso</value>
                 <graphics>
-                    <offset x="0.0" y="0.0"/>
+                    <offset x="-5.0" y="35.0"/>
                 </graphics>
             </name>
             <orientation>
@@ -465,14 +213,14 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="t_alteracao_erro_tecnico">
+        <transition id="cancelamento_efetuado_com_sucesso">
             <graphics>
-                <position x="1530.0" y="150.0"/>
+                <position x="210.0" y="75.0"/>
             </graphics>
             <name>
-                <value>alteracao_erro_tecnico</value>
+                <value>cancelamento_efetuado_com_sucesso</value>
                 <graphics>
-                    <offset x="0.0" y="0.0"/>
+                    <offset x="-5.0" y="35.0"/>
                 </graphics>
             </name>
             <orientation>
@@ -491,14 +239,14 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="t_alteracao_nenhuma_alteracao">
+        <transition id="cancelar">
             <graphics>
-                <position x="1200.0" y="150.0"/>
+                <position x="480.0" y="270.0"/>
             </graphics>
             <name>
-                <value>alteracao_nenhuma_alteracao</value>
+                <value>cancelar</value>
                 <graphics>
-                    <offset x="0.0" y="0.0"/>
+                    <offset x="-5.0" y="35.0"/>
                 </graphics>
             </name>
             <orientation>
@@ -517,14 +265,14 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="t_alterar_campos_agendamento">
+        <transition id="cancelar_edicao">
             <graphics>
-                <position x="840.0" y="90.0"/>
+                <position x="480.0" y="330.0"/>
             </graphics>
             <name>
-                <value>alterar_campos_agendamento</value>
+                <value>cancelar_edicao</value>
                 <graphics>
-                    <offset x="0.0" y="0.0"/>
+                    <offset x="-5.0" y="35.0"/>
                 </graphics>
             </name>
             <orientation>
@@ -543,14 +291,14 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="t_clicar_cancelar_agendamento">
+        <transition id="erro_alguma_informação_invalida">
             <graphics>
-                <position x="990.0" y="360.0"/>
+                <position x="660.0" y="120.0"/>
             </graphics>
             <name>
-                <value>clicar_cancelar_agendamento</value>
+                <value>erro_alguma_informação_invalida</value>
                 <graphics>
-                    <offset x="0.0" y="0.0"/>
+                    <offset x="-5.0" y="35.0"/>
                 </graphics>
             </name>
             <orientation>
@@ -569,14 +317,14 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="t_confirmar_alteracao">
+        <transition id="Erro_cancelamento">
             <graphics>
-                <position x="1200.0" y="90.0"/>
+                <position x="300.0" y="150.0"/>
             </graphics>
             <name>
-                <value>confirmar_alteracao</value>
+                <value>Erro_cancelamento</value>
                 <graphics>
-                    <offset x="0.0" y="0.0"/>
+                    <offset x="-5.0" y="35.0"/>
                 </graphics>
             </name>
             <orientation>
@@ -595,14 +343,14 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="t_confirmar_cancelamento">
+        <transition id="preencher_formulário">
             <graphics>
-                <position x="1200.0" y="360.0"/>
+                <position x="570.0" y="210.0"/>
             </graphics>
             <name>
-                <value>confirmar_cancelamento</value>
+                <value>preencher_formulário</value>
                 <graphics>
-                    <offset x="0.0" y="0.0"/>
+                    <offset x="-5.0" y="35.0"/>
                 </graphics>
             </name>
             <orientation>
@@ -621,14 +369,14 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="t_corrigir_alteracao">
+        <transition id="selecionar_editar">
             <graphics>
-                <position x="780.0" y="150.0"/>
+                <position x="405.0" y="210.0"/>
             </graphics>
             <name>
-                <value>corrigir_alteracao</value>
+                <value>selecionar_editar</value>
                 <graphics>
-                    <offset x="0.0" y="0.0"/>
+                    <offset x="-5.0" y="35.0"/>
                 </graphics>
             </name>
             <orientation>
@@ -647,12 +395,12 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="t_exibir_detalhes_agendamento_alteracao">
+        <transition id="selecionar_excluir_agendamento">
             <graphics>
-                <position x="630.0" y="90.0"/>
+                <position x="405.0" y="135.0"/>
             </graphics>
             <name>
-                <value>exibir_detalhes_agendamento_alteracao</value>
+                <value>selecionar_excluir_agendamento</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -673,298 +421,12 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="t_exibir_detalhes_agendamento_cancelamento">
-            <graphics>
-                <position x="780.0" y="360.0"/>
-            </graphics>
-            <name>
-                <value>exibir_detalhes_agendamento_cancelamento</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="t_exibir_lista_agendamentos_ativos">
-            <graphics>
-                <position x="360.0" y="210.0"/>
-            </graphics>
-            <name>
-                <value>exibir_lista_agendamentos_ativos</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="t_finalizar_alteracao">
-            <graphics>
-                <position x="1320.0" y="90.0"/>
-            </graphics>
-            <name>
-                <value>finalizar_alteracao</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="t_reagendar_ao_inves_de_cancelar">
-            <graphics>
-                <position x="690.0" y="240.0"/>
-            </graphics>
-            <name>
-                <value>reagendar_ao_inves_de_cancelar</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="t_retornar_painel_alteracao">
-            <graphics>
-                <position x="1530.0" y="90.0"/>
-            </graphics>
-            <name>
-                <value>retornar_painel_alteracao</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="t_retornar_painel_alteracao_erro_nao_existente">
-            <graphics>
-                <position x="180.0" y="90.0"/>
-            </graphics>
-            <name>
-                <value>retornar_painel_alteracao_erro_nao_existente</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="t_retornar_painel_alteracao_erro_nenhuma_alteracao">
-            <graphics>
-                <position x="1470.0" y="180.0"/>
-            </graphics>
-            <name>
-                <value>retornar_painel_alteracao_erro_nenhuma_alteracao</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="t_retornar_painel_alteracao_erro_tecnico">
-            <graphics>
-                <position x="1650.0" y="120.0"/>
-            </graphics>
-            <name>
-                <value>retornar_painel_alteracao_erro_tecnico</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="t_retornar_painel_cancelamento">
-            <graphics>
-                <position x="1290.0" y="240.0"/>
-            </graphics>
-            <name>
-                <value>retornar_painel_cancelamento</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="t_selecionar_agendamento_alterar">
-            <graphics>
-                <position x="450.0" y="90.0"/>
-            </graphics>
-            <name>
-                <value>selecionar_agendamento_alterar</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="t_selecionar_agendamento_cancelar">
-            <graphics>
-                <position x="600.0" y="360.0"/>
-            </graphics>
-            <name>
-                <value>selecionar_agendamento_cancelar</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="t_selecionar_visualizar_historico">
+        <transition id="selecionar_icone_de_info_de_algum_agendamento">
             <graphics>
                 <position x="240.0" y="210.0"/>
             </graphics>
             <name>
-                <value>selecionar_visualizar_historico</value>
+                <value>selecionar_icone_de_info_de_algum_agendamento</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -985,7 +447,33 @@
                 <value>1</value>
             </priority>
         </transition>
-        <arc id="alteracao_invalida to p_erro_alteracao_campos_invalidos" source="alteracao_invalida" target="p_erro_alteracao_campos_invalidos">
+        <transition id="selecionar_salvar_alteracao">
+            <graphics>
+                <position x="765.0" y="210.0"/>
+            </graphics>
+            <name>
+                <value>selecionar_salvar_alteracao</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>0</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <arc id="agendamento_alterado_com_sucesso to informacoes_alteradas" source="agendamento_alterado_com_sucesso" target="informacoes_alteradas">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -994,11 +482,12 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="966" y="162" curvePoint="false"/>
-            <arcpath id="001" x="896" y="162" curvePoint="false"/>
+            <arcpath id="000" x="665" y="56" curvePoint="false"/>
+            <arcpath id="001" x="596" y="56" curvePoint="false"/>
+            <arcpath id="002" x="664" y="207" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_agendamento_atualizado_to_t_alteracao_erro_tecnico" source="p_agendamento_atualizado" target="t_alteracao_erro_tecnico">
+        <arc id="arc_p_funcionario_autenticado_to_t_acessar_painel_funcionario" source="p_funcionario_autenticado" target="acessar_tela_agendamento">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1007,11 +496,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="1435" y="109" curvePoint="false"/>
-            <arcpath id="001" x="1536" y="162" curvePoint="false"/>
+            <arcpath id="000" x="85" y="221" curvePoint="false"/>
+            <arcpath id="001" x="125" y="221" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_agendamento_atualizado_to_t_retornar_painel_alteracao" source="p_agendamento_atualizado" target="t_retornar_painel_alteracao">
+        <arc id="arc_p_painel_funcionario_to_t_selecionar_visualizar_historico" source="p_painel_funcionario" target="selecionar_icone_de_info_de_algum_agendamento">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1020,11 +509,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="1436" y="101" curvePoint="false"/>
-            <arcpath id="001" x="1537" y="97" curvePoint="false"/>
+            <arcpath id="000" x="205" y="221" curvePoint="false"/>
+            <arcpath id="001" x="245" y="221" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_agendamento_selecionado_alteracao_to_t_exibir_detalhes_agendamento_alteracao" source="p_agendamento_selecionado_alteracao" target="t_exibir_detalhes_agendamento_alteracao">
+        <arc id="arc_t_acessar_painel_funcionario_to_p_painel_funcionario" source="acessar_tela_agendamento" target="p_painel_funcionario">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1033,11 +522,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="566" y="102" curvePoint="false"/>
-            <arcpath id="001" x="636" y="102" curvePoint="false"/>
+            <arcpath id="000" x="135" y="221" curvePoint="false"/>
+            <arcpath id="001" x="176" y="221" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_agendamento_selecionado_cancelamento_to_t_exibir_detalhes_agendamento_cancelamento" source="p_agendamento_selecionado_cancelamento" target="t_exibir_detalhes_agendamento_cancelamento">
+        <arc id="arc_t_agendamento_nao_existente_reservado_to_p_erro_alteracao_nao_existente_reservado" source="selecionar_excluir_agendamento" target="processando_cancelamento">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1046,11 +535,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="716" y="372" curvePoint="false"/>
-            <arcpath id="001" x="786" y="372" curvePoint="false"/>
+            <arcpath id="000" x="411" y="141" curvePoint="false"/>
+            <arcpath id="001" x="324" y="93" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_agendamento_selecionado_cancelamento_to_t_reagendar_ao_inves_de_cancelar" source="p_agendamento_selecionado_cancelamento" target="t_reagendar_ao_inves_de_cancelar">
+        <arc id="arc_t_selecionar_visualizar_historico_to_p_historico_agendamentos_inicio" source="selecionar_icone_de_info_de_algum_agendamento" target="detalhe_do_agendamento">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1059,11 +548,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="702" y="357" curvePoint="false"/>
-            <arcpath id="001" x="702" y="267" curvePoint="false"/>
+            <arcpath id="000" x="255" y="221" curvePoint="false"/>
+            <arcpath id="001" x="296" y="221" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_agendamento_status_cancelado_to_t_retornar_painel_cancelamento" source="p_agendamento_status_cancelado" target="t_retornar_painel_cancelamento">
+        <arc id="cancelamento_efetuado_com_sucesso to detalhes_do_cancelamento" source="cancelamento_efetuado_com_sucesso" target="detalhes_do_cancelamento">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1072,11 +561,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="1302" y="357" curvePoint="false"/>
-            <arcpath id="001" x="1302" y="267" curvePoint="false"/>
+            <arcpath id="000" x="215" y="86" curvePoint="false"/>
+            <arcpath id="001" x="145" y="86" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_alteracao_validada_to_t_alteracao_nenhuma_alteracao" source="p_alteracao_validada" target="t_alteracao_nenhuma_alteracao">
+        <arc id="cancelar_edicao to detalhe_do_agendamento" source="cancelar_edicao" target="detalhe_do_agendamento">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1085,11 +574,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="1162" y="113" curvePoint="false"/>
-            <arcpath id="001" x="1206" y="162" curvePoint="false"/>
+            <arcpath id="000" x="485" y="341" curvePoint="false"/>
+            <arcpath id="001" x="323" y="229" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_alteracao_validada_to_t_confirmar_alteracao" source="p_alteracao_validada" target="t_confirmar_alteracao">
+        <arc id="cancelar to detalhe_do_agendamento" source="cancelar" target="detalhe_do_agendamento">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1098,11 +587,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="1166" y="102" curvePoint="false"/>
-            <arcpath id="001" x="1206" y="102" curvePoint="false"/>
+            <arcpath id="000" x="485" y="281" curvePoint="false"/>
+            <arcpath id="001" x="325" y="225" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_confirmacao_alteracao_pendente_to_t_finalizar_alteracao" source="p_confirmacao_alteracao_pendente" target="t_finalizar_alteracao">
+        <arc id="detalhe_do_agendamento to selecionar_editar" source="detalhe_do_agendamento" target="selecionar_editar">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1111,11 +600,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="1286" y="102" curvePoint="false"/>
-            <arcpath id="001" x="1326" y="102" curvePoint="false"/>
+            <arcpath id="000" x="325" y="221" curvePoint="false"/>
+            <arcpath id="001" x="410" y="221" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_confirmacao_cancelamento_pendente_to_t_confirmar_cancelamento" source="p_confirmacao_cancelamento_pendente" target="t_confirmar_cancelamento">
+        <arc id="detalhe_do_agendamento to selecionar_excluir_agendamento" source="detalhe_do_agendamento" target="selecionar_excluir_agendamento">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1124,11 +613,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="1106" y="372" curvePoint="false"/>
-            <arcpath id="001" x="1206" y="372" curvePoint="false"/>
+            <arcpath id="000" x="323" y="212" curvePoint="false"/>
+            <arcpath id="001" x="410" y="151" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_detalhes_agendamento_exibidos_alteracao_to_t_alterar_campos_agendamento" source="p_detalhes_agendamento_exibidos_alteracao" target="t_alterar_campos_agendamento">
+        <arc id="erro_alguma_informação_invalida to informacoes_alteradas" source="erro_alguma_informação_invalida" target="informacoes_alteradas">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1137,11 +626,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="746" y="102" curvePoint="false"/>
-            <arcpath id="001" x="846" y="102" curvePoint="false"/>
+            <arcpath id="000" x="671" y="146" curvePoint="false"/>
+            <arcpath id="001" x="671" y="206" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_detalhes_agendamento_exibidos_cancelamento_to_t_clicar_cancelar_agendamento" source="p_detalhes_agendamento_exibidos_cancelamento" target="t_clicar_cancelar_agendamento">
+        <arc id="Erro_cancelamento to detalhe_do_agendamento" source="Erro_cancelamento" target="detalhe_do_agendamento">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1150,11 +639,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="926" y="372" curvePoint="false"/>
-            <arcpath id="001" x="996" y="372" curvePoint="false"/>
+            <arcpath id="000" x="311" y="176" curvePoint="false"/>
+            <arcpath id="001" x="311" y="206" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_erro_alteracao_campos_invalidos_to_t_corrigir_alteracao" source="p_erro_alteracao_campos_invalidos" target="t_corrigir_alteracao">
+        <arc id="exibir_formulário to cancelar" source="exibir_formulário" target="cancelar">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1163,11 +652,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="867" y="162" curvePoint="false"/>
-            <arcpath id="001" x="796" y="162" curvePoint="false"/>
+            <arcpath id="000" x="491" y="235" curvePoint="false"/>
+            <arcpath id="001" x="491" y="266" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_erro_alteracao_nao_existente_reservado_to_t_retornar_painel_alteracao_erro_nao_existente" source="p_erro_alteracao_nao_existente_reservado" target="t_retornar_painel_alteracao_erro_nao_existente">
+        <arc id="exibir_formulário to preencher_formulário" source="exibir_formulário" target="preencher_formulário">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1176,11 +665,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="297" y="102" curvePoint="false"/>
-            <arcpath id="001" x="196" y="102" curvePoint="false"/>
+            <arcpath id="000" x="505" y="221" curvePoint="false"/>
+            <arcpath id="001" x="575" y="221" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_erro_alteracao_nenhuma_alteracao_to_t_retornar_painel_alteracao_erro_nenhuma_alteracao" source="p_erro_alteracao_nenhuma_alteracao" target="t_retornar_painel_alteracao_erro_nenhuma_alteracao">
+        <arc id="informacoes_alteradas to cancelar_edicao" source="informacoes_alteradas" target="cancelar_edicao">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1189,11 +678,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="1406" y="166" curvePoint="false"/>
-            <arcpath id="001" x="1477" y="187" curvePoint="false"/>
+            <arcpath id="000" x="658" y="229" curvePoint="false"/>
+            <arcpath id="001" x="495" y="341" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_erro_alteracao_tecnico_to_t_retornar_painel_alteracao_erro_tecnico" source="p_erro_alteracao_tecnico" target="t_retornar_painel_alteracao_erro_tecnico">
+        <arc id="informacoes_alteradas to selecionar_salvar_alteracao" source="informacoes_alteradas" target="selecionar_salvar_alteracao">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1202,11 +691,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="1615" y="155" curvePoint="false"/>
-            <arcpath id="001" x="1656" y="137" curvePoint="false"/>
+            <arcpath id="000" x="685" y="221" curvePoint="false"/>
+            <arcpath id="001" x="770" y="221" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_funcionario_autenticado_to_t_acessar_painel_funcionario" source="p_funcionario_autenticado" target="t_acessar_painel_funcionario">
+        <arc id="preencher_formulário to informacoes_alteradas" source="preencher_formulário" target="informacoes_alteradas">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1215,11 +704,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="86" y="222" curvePoint="false"/>
-            <arcpath id="001" x="126" y="222" curvePoint="false"/>
+            <arcpath id="000" x="585" y="221" curvePoint="false"/>
+            <arcpath id="001" x="656" y="221" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_historico_agendamentos_inicio_to_t_exibir_lista_agendamentos_ativos" source="p_historico_agendamentos_inicio" target="t_exibir_lista_agendamentos_ativos">
+        <arc id="processando_cancelamento to cancelamento_efetuado_com_sucesso" source="processando_cancelamento" target="cancelamento_efetuado_com_sucesso">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1228,11 +717,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="326" y="222" curvePoint="false"/>
-            <arcpath id="001" x="366" y="222" curvePoint="false"/>
+            <arcpath id="000" x="296" y="86" curvePoint="false"/>
+            <arcpath id="001" x="225" y="86" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_lista_agendamentos_ativos_exibida_to_t_agendamento_nao_existente_reservado" source="p_lista_agendamentos_ativos_exibida" target="t_agendamento_nao_existente_reservado">
+        <arc id="processando_cancelamento to Erro_cancelamento" source="processando_cancelamento" target="Erro_cancelamento">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1241,11 +730,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="432" y="207" curvePoint="false"/>
-            <arcpath id="001" x="432" y="117" curvePoint="false"/>
+            <arcpath id="000" x="311" y="100" curvePoint="false"/>
+            <arcpath id="001" x="311" y="146" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_lista_agendamentos_ativos_exibida_to_t_selecionar_agendamento_alterar" source="p_lista_agendamentos_ativos_exibida" target="t_selecionar_agendamento_alterar">
+        <arc id="processando_dados to agendamento_alterado_com_sucesso" source="processando_dados" target="agendamento_alterado_com_sucesso">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1254,11 +743,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="436" y="207" curvePoint="false"/>
-            <arcpath id="001" x="462" y="117" curvePoint="false"/>
+            <arcpath id="000" x="763" y="122" curvePoint="false"/>
+            <arcpath id="001" x="675" y="56" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_lista_agendamentos_ativos_exibida_to_t_selecionar_agendamento_cancelar" source="p_lista_agendamentos_ativos_exibida" target="t_selecionar_agendamento_cancelar">
+        <arc id="processando_dados to erro_alguma_informação_invalida" source="processando_dados" target="erro_alguma_informação_invalida">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1267,11 +756,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="443" y="231" curvePoint="false"/>
-            <arcpath id="001" x="606" y="372" curvePoint="false"/>
+            <arcpath id="000" x="761" y="131" curvePoint="false"/>
+            <arcpath id="001" x="675" y="131" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_nova_data_horario_profissional_selecionados_to_t_validar_alteracao" source="p_nova_data_horario_profissional_selecionados" target="alteracao_valida">
+        <arc id="selecionar_editar to exibir_formulário" source="selecionar_editar" target="exibir_formulário">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1280,11 +769,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="986" y="102" curvePoint="false"/>
-            <arcpath id="001" x="1056" y="102" curvePoint="false"/>
+            <arcpath id="000" x="420" y="221" curvePoint="false"/>
+            <arcpath id="001" x="476" y="221" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="arc_p_painel_funcionario_to_t_selecionar_visualizar_historico" source="p_painel_funcionario" target="t_selecionar_visualizar_historico">
+        <arc id="selecionar_salvar_alteracao to processando_dados" source="selecionar_salvar_alteracao" target="processando_dados">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -1293,320 +782,8 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="206" y="222" curvePoint="false"/>
-            <arcpath id="001" x="246" y="222" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_acessar_painel_funcionario_to_p_painel_funcionario" source="t_acessar_painel_funcionario" target="p_painel_funcionario">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="136" y="222" curvePoint="false"/>
-            <arcpath id="001" x="177" y="222" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_agendamento_nao_existente_reservado_to_p_erro_alteracao_nao_existente_reservado" source="t_agendamento_nao_existente_reservado" target="p_erro_alteracao_nao_existente_reservado">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="426" y="102" curvePoint="false"/>
-            <arcpath id="001" x="326" y="102" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_alteracao_erro_tecnico_to_p_erro_alteracao_tecnico" source="t_alteracao_erro_tecnico" target="p_erro_alteracao_tecnico">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="1546" y="162" curvePoint="false"/>
-            <arcpath id="001" x="1587" y="162" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_alteracao_nenhuma_alteracao_to_p_erro_alteracao_nenhuma_alteracao" source="t_alteracao_nenhuma_alteracao" target="p_erro_alteracao_nenhuma_alteracao">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="1216" y="162" curvePoint="false"/>
-            <arcpath id="001" x="1377" y="162" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_alterar_campos_agendamento_to_p_nova_data_horario_profissional_selecionados" source="t_alterar_campos_agendamento" target="p_nova_data_horario_profissional_selecionados">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="856" y="102" curvePoint="false"/>
-            <arcpath id="001" x="957" y="102" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_clicar_cancelar_agendamento_to_p_confirmacao_cancelamento_pendente" source="t_clicar_cancelar_agendamento" target="p_confirmacao_cancelamento_pendente">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="1006" y="372" curvePoint="false"/>
-            <arcpath id="001" x="1077" y="372" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_confirmar_alteracao_to_p_confirmacao_alteracao_pendente" source="t_confirmar_alteracao" target="p_confirmacao_alteracao_pendente">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="1216" y="102" curvePoint="false"/>
-            <arcpath id="001" x="1257" y="102" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_confirmar_cancelamento_to_p_agendamento_status_cancelado" source="t_confirmar_cancelamento" target="p_agendamento_status_cancelado">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="1216" y="372" curvePoint="false"/>
-            <arcpath id="001" x="1287" y="372" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_corrigir_alteracao_to_p_detalhes_agendamento_exibidos_alteracao" source="t_corrigir_alteracao" target="p_detalhes_agendamento_exibidos_alteracao">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="786" y="162" curvePoint="false"/>
-            <arcpath id="001" x="742" y="113" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_exibir_detalhes_agendamento_alteracao_to_p_detalhes_agendamento_exibidos_alteracao" source="t_exibir_detalhes_agendamento_alteracao" target="p_detalhes_agendamento_exibidos_alteracao">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="646" y="102" curvePoint="false"/>
-            <arcpath id="001" x="717" y="102" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_exibir_detalhes_agendamento_cancelamento_to_p_detalhes_agendamento_exibidos_cancelamento" source="t_exibir_detalhes_agendamento_cancelamento" target="p_detalhes_agendamento_exibidos_cancelamento">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="796" y="372" curvePoint="false"/>
-            <arcpath id="001" x="897" y="372" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_exibir_lista_agendamentos_ativos_to_p_lista_agendamentos_ativos_exibida" source="t_exibir_lista_agendamentos_ativos" target="p_lista_agendamentos_ativos_exibida">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="376" y="222" curvePoint="false"/>
-            <arcpath id="001" x="417" y="222" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_finalizar_alteracao_to_p_agendamento_atualizado" source="t_finalizar_alteracao" target="p_agendamento_atualizado">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="1336" y="102" curvePoint="false"/>
-            <arcpath id="001" x="1407" y="102" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_reagendar_ao_inves_de_cancelar_to_p_agendamento_selecionado_alteracao" source="t_reagendar_ao_inves_de_cancelar" target="p_agendamento_selecionado_alteracao">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="696" y="252" curvePoint="false"/>
-            <arcpath id="001" x="562" y="112" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_retornar_painel_alteracao_erro_nao_existente_to_p_painel_funcionario" source="t_retornar_painel_alteracao_erro_nao_existente" target="p_painel_funcionario">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="192" y="117" curvePoint="false"/>
-            <arcpath id="001" x="192" y="207" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_retornar_painel_alteracao_erro_nenhuma_alteracao_to_p_painel_funcionario" source="t_retornar_painel_alteracao_erro_nenhuma_alteracao" target="p_painel_funcionario">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="1476" y="197" curvePoint="false"/>
-            <arcpath id="001" x="206" y="221" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_retornar_painel_alteracao_erro_tecnico_to_p_painel_funcionario" source="t_retornar_painel_alteracao_erro_tecnico" target="p_painel_funcionario">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="1657" y="127" curvePoint="false"/>
-            <arcpath id="001" x="206" y="221" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_retornar_painel_alteracao_to_p_painel_funcionario" source="t_retornar_painel_alteracao" target="p_painel_funcionario">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="1536" y="107" curvePoint="false"/>
-            <arcpath id="001" x="206" y="220" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_retornar_painel_cancelamento_to_p_painel_funcionario" source="t_retornar_painel_cancelamento" target="p_painel_funcionario">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="1296" y="252" curvePoint="false"/>
-            <arcpath id="001" x="206" y="222" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_selecionar_agendamento_alterar_to_p_agendamento_selecionado_alteracao" source="t_selecionar_agendamento_alterar" target="p_agendamento_selecionado_alteracao">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="466" y="102" curvePoint="false"/>
-            <arcpath id="001" x="537" y="102" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_selecionar_agendamento_cancelar_to_p_agendamento_selecionado_cancelamento" source="t_selecionar_agendamento_cancelar" target="p_agendamento_selecionado_cancelamento">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="616" y="372" curvePoint="false"/>
-            <arcpath id="001" x="687" y="372" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_selecionar_visualizar_historico_to_p_historico_agendamentos_inicio" source="t_selecionar_visualizar_historico" target="p_historico_agendamentos_inicio">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="256" y="222" curvePoint="false"/>
-            <arcpath id="001" x="297" y="222" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="arc_t_validar_alteracao_to_p_alteracao_validada" source="alteracao_valida" target="p_alteracao_validada">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="1066" y="102" curvePoint="false"/>
-            <arcpath id="001" x="1137" y="102" curvePoint="false"/>
-            <type value="normal"/>
-        </arc>
-        <arc id="p_nova_data_horario_profissional_selecionados to T29" source="p_nova_data_horario_profissional_selecionados" target="alteracao_invalida">
-            <graphics/>
-            <inscription>
-                <value>Default,1</value>
-                <graphics/>
-            </inscription>
-            <tagged>
-                <value>false</value>
-            </tagged>
-            <arcpath id="000" x="972" y="116" curvePoint="false"/>
-            <arcpath id="001" x="972" y="147" curvePoint="false"/>
+            <arcpath id="000" x="776" y="206" curvePoint="false"/>
+            <arcpath id="001" x="776" y="145" curvePoint="false"/>
             <type value="normal"/>
         </arc>
     </net>
