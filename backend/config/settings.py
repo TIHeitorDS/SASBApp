@@ -150,6 +150,7 @@ else:
     # SE NÃO estamos em modo de depuração (produção), ENTÃO configure o CORS desta outra maneira...
     CORS_ALLOWED_ORIGINS = [
         "https://www.sasbapp.com.br",
+        "http://34.196.102.66"
     ]
 
 # Configurações do Simple JWT
