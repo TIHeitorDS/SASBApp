@@ -59,7 +59,7 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         employee = self.get_object()
 
 
-class ProfessionalViewSet(viewsets.ReadOnlyModelViewSet):
+class ProfessionalViewSet(viewsets.ModelViewSet):
     serializer_class = ProfessionalSerializer
     permission_classes = [permissions.IsAuthenticated]
 
